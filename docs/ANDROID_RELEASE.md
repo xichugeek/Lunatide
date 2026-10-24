@@ -8,6 +8,14 @@
 
 **这一步必须由人类执行。不要把密码发给开发代理，不要提交密钥或 `keystore.properties`。**
 
+可在本机交互终端运行辅助脚本：
+
+```powershell
+.\scripts\setup-signing.ps1
+```
+
+脚本从 `JAVA_HOME` 或 PATH 寻找 keytool，也可通过 `-KeytoolPath` 指定它。它预填项目证书信息，由你在本机直接输入密码两次创建密钥，再输入一次校验并写入被忽略的本机配置。已有密钥保留，已有配置不覆盖；密码不作为命令行参数、不输出到日志、不发送到聊天。此脚本只做本机设置，不创建 tag 或 Release。
+
 在本机终端创建密钥目录后执行（`keytool` 位于 JDK/JBR 的 `bin` 中）：
 
 ```powershell

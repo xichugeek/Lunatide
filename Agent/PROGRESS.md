@@ -6,7 +6,7 @@
 
 - 当前里程碑：M0～M9 已实现并推送；M10 本地构建、中文素材与发布准备已就绪，等待人类生成正式签名，不标 M10 完成
 - 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug lintRelease assembleDebug assembleRelease` 成功（2026-10-24）；129 个 JVM 测试、15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
-- 待人类提供：按 09 §7 / 11 §3.2 生成并保管正式签名密钥、在本机填写被忽略的 `keystore.properties`；不需要发送密码。尚未推送 tag、创建 Release 或部署官网。
+- 签名设置：用户已授权代执行命令，已启动“月汐 · 正式签名”本机交互窗口，由用户直接输入密码后生成密钥及被忽略的 keystore.properties；不需要向聊天发送密码。尚未推送 tag、创建 Release 或部署官网。
 
 ## 环境
 
@@ -28,6 +28,14 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### M10 继续 · 本机交互签名设置 —— 🚧 等待窗口内输入（2026-10-24）
+- 用户明确授权代执行上一轮签名命令。新增 setup-signing.ps1 并已在独立可见 PowerShell 窗口启动，固定项目证书主体，不要求填写个人姓名/住址；用户在窗口输入密码，代理不读取密码或配置内容。
+- 本机配置由用户再次输入密码并校验成功后创建；密钥在仓库外、配置被 Git 忽略，均不覆盖已有文件。输入为空或校验失败不会写入配置；脚本不包含密码、不创建 tag/Release。
+- 验证：PowerShell 语法解析 ✅；CheckOnly 实际工具/状态检查 ✅（不生成密钥）；虚构的空格、反斜杠、中文、换行、制表符经实际 JDK Properties.load 往返 ✅。没有修改 Android App 源码，本轮不重复宣称执行 Android 测试；上轮 129 JVM/15 仪器及构建结果保留。
+- CI 补记：发布准备 f471888 和进度 ff07a05 的 Actions 均已 success，后者 https://github.com/xichugeek/Lunatide/actions/runs/40066778291 。历史“正在运行”记录保留。
+- 目前仅检查签名文件/配置是否存在，不读取内容；窗口正等待用户输入。尚未生成正式 APK 校验元数据，M10 仍未完成。
+- 决策：D-017。配置完成后继续 release.ps1 → 校验最终包 → 更新官网素材；公开 tag/Release 仍待单独明确同意。
 
 ### M10 · 发布准备 —— 🚧 已完成可独立执行的准备，待正式签名（2026-10-24）
 - 完成内容：1.0.0 / 10000；R8/资源压缩/SQLCipher JNI keep；正式签名发布脚本和官网元数据更新脚本；新手构建与发布指南；README、SECURITY、CHANGELOG 定稿；debug 专用 8 周期/20 年虚构数据及正式源集隔离；5 张中文真实运行截图、512px 图标、12 节官网文案草稿与模板。
