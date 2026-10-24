@@ -20,7 +20,8 @@ import kotlinx.coroutines.flow.Flow as DataFlow
 
 interface CycleRepository {
     val periods: DataFlow<List<Period>>
-    suspend fun edit(action: PeriodAction, day: LocalDate, recent: Boolean = false, shorten: Boolean = false): Result<PeriodEdit>
+    suspend fun edit(action: PeriodAction, day: LocalDate, recent: Boolean = false, shorten: Boolean = false, base: List<Period>? = null): Result<PeriodEdit>
+    suspend fun restorePeriods(periods: List<Period>): Result<Unit>
 }
 interface DayLogRepository {
     val logs: DataFlow<List<DayLog>>
@@ -34,10 +35,10 @@ class RecordsRepository @Inject constructor(private val owner: DatabaseOwner, pr
     override val logs = flow { emitAll(owner.get().records().logs().map { rows -> rows.map { it.toModel() } }) }
         .catch { if (it is CancellationException) throw it; throw DataUnavailable(it) }.flowOn(Dispatchers.IO)
 
-    override suspend fun edit(action: PeriodAction, day: LocalDate, recent: Boolean, shorten: Boolean): Result<PeriodEdit> = storageResult {
+    override suspend fun edit(action: PeriodAction, day: LocalDate, recent: Boolean, shorten: Boolean, base: List<Period>?): Result<PeriodEdit> = storageResult {
         val db = owner.get()
         db.withTransaction {
-            val old = db.records().periodSnapshot().map { it.toModel() }
+            val old = base ?: db.records().periodSnapshot().map { it.toModel() }
             val result = PeriodRules.edit(old, action, day, clock.today.value, recent, shorten)
             if (result is PeriodEdit.Applied) {
                 check(PeriodRules.valid(result.periods, clock.today.value))
@@ -51,6 +52,16 @@ class RecordsRepository @Inject constructor(private val owner: DatabaseOwner, pr
                 removeEmptyLogs(db, result.periods)
             }
             result
+        }
+    }
+
+    override suspend fun restorePeriods(periods: List<Period>): Result<Unit> = storageResult {
+        require(PeriodRules.valid(periods, clock.today.value))
+        val db = owner.get()
+        db.withTransaction {
+            db.records().deletePeriods()
+            db.records().insertPeriods(periods.map { it.toEntity() })
+            removeEmptyLogs(db, periods)
         }
     }
 
@@ -72,7 +83,10 @@ class RecordsRepository @Inject constructor(private val owner: DatabaseOwner, pr
     private suspend fun removeEmptyLogs(db: LunatideDatabase, periods: List<Period>) {
         db.records().logSnapshot().forEach {
             val log = it.toModel()
-            if (log.isEmpty && periods.none { p -> p.contains(log.day, clock.today.value) }) db.records().deleteLog(it.log.day)
+            val outsidePeriod = periods.none { p -> p.contains(log.day, clock.today.value) }
+            val cleaned = if (outsidePeriod && log.flow != null && log.flow != Flow.SPOTTING) log.copy(flow = null) else log
+            if (cleaned.isEmpty && outsidePeriod) db.records().deleteLog(it.log.day)
+            else if (cleaned != log) db.records().upsert(it.log.copy(flow = null, updatedAt = clock.timestamp()))
         }
     }
 

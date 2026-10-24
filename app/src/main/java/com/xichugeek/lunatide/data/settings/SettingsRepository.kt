@@ -24,11 +24,11 @@ data class AppSettings(
 )
 
 @Singleton
-class SettingsRepository @Inject constructor(@ApplicationContext context: Context) {
+class SettingsRepository @Inject constructor(@ApplicationContext context: Context) : SettingsStore {
     private val store = context.settingsStore
-    val settings = store.data.map(::decode)
-    suspend fun update(transform: (AppSettings) -> AppSettings) { store.edit { encode(transform(decode(it)), it) } }
-    suspend fun clear() { store.edit { it.clear() } }
+    override val settings = store.data.map(::decode)
+    override suspend fun update(transform: (AppSettings) -> AppSettings) { store.edit { encode(transform(decode(it)), it) } }
+    override suspend fun clear() { store.edit { it.clear() } }
 
     private fun decode(p: Preferences) = AppSettings(
         p[booleanPreferencesKey("onboarding_completed")] ?: false,
@@ -59,4 +59,10 @@ class SettingsRepository @Inject constructor(@ApplicationContext context: Contex
         bool("secure_screen", s.secureScreen); bool("lock_enabled", s.lockEnabled); bool("lock_biometric", s.lockBiometric)
         int("lock_timeout_seconds", s.lockTimeoutSeconds)
     }
+}
+
+interface SettingsStore {
+    val settings: kotlinx.coroutines.flow.Flow<AppSettings>
+    suspend fun update(transform: (AppSettings) -> AppSettings)
+    suspend fun clear()
 }

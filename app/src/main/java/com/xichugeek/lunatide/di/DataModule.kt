@@ -5,6 +5,7 @@ import com.xichugeek.lunatide.core.security.DatabaseKeyManager
 import com.xichugeek.lunatide.core.time.*
 import com.xichugeek.lunatide.data.db.*
 import com.xichugeek.lunatide.data.repository.*
+import com.xichugeek.lunatide.data.settings.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,4 +23,5 @@ object DataModule {
     @Provides @Singleton fun helper(): HelperFactoryProvider = encryptedHelperProvider()
     @Provides fun cycles(records: RecordsRepository): CycleRepository = records
     @Provides fun logs(records: RecordsRepository): DayLogRepository = records
+    @Provides fun settings(settings: SettingsRepository): SettingsStore = settings
 }

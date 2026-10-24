@@ -1,6 +1,8 @@
 import com.android.build.api.artifact.SingleArtifact
 import javax.xml.parsers.DocumentBuilderFactory
 import java.util.Properties
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.file.DirectoryProperty
 
 plugins {
     alias(libs.plugins.android.application)
@@ -49,6 +51,23 @@ android {
     }
 }
 kotlin { jvmToolchain(17) }
+
+abstract class GenerateChineseResources : DefaultTask() {
+    @get:InputFile abstract val sourceFile: RegularFileProperty
+    @get:OutputDirectory abstract val outputDirectory: DirectoryProperty
+    @TaskAction fun generate() {
+        val output = outputDirectory.file("values-zh/strings.xml").get().asFile
+        output.parentFile.mkdirs()
+        output.writeBytes(sourceFile.get().asFile.readBytes())
+    }
+}
+val generateChineseResources = tasks.register<GenerateChineseResources>("generateChineseResources") {
+    sourceFile.set(layout.projectDirectory.file("src/main/res/values/strings.xml"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/chineseResources"))
+}
+androidComponents.onVariants { variant ->
+    variant.sources.res?.addGeneratedSourceDirectory(generateChineseResources, GenerateChineseResources::outputDirectory)
+}
 
 dependencies {
     implementation(platform(libs.compose.bom))

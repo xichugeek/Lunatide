@@ -99,4 +99,12 @@ class EncryptedDatabaseTest {
             assertTrue(db.records().logSnapshot().isEmpty())
         } finally { db.close() }
     }
+    @Test fun undoStartPreservesNoteAndClearsIncompatibleFlow() = runBlocking(Dispatchers.IO) {
+        val repo = RecordsRepository(owner, clock)
+        repo.edit(PeriodAction.START, day).getOrThrow()
+        repo.save(DayLog(day, flow = com.xichugeek.lunatide.domain.model.Flow.MEDIUM, note = "Fictional note")).getOrThrow()
+        repo.restorePeriods(emptyList()).getOrThrow()
+        val log = repo.logs.first().single()
+        assertEquals("Fictional note", log.note); assertNull(log.flow); assertTrue(repo.periods.first().isEmpty())
+    }
 }

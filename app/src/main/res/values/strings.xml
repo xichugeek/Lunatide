@@ -6,4 +6,75 @@
     <string name="welcome">欢迎来到月汐</string>
     <string name="tagline">不注册、不联网、无广告，只属于你的周期记录</string>
     <string name="placeholder">这里将呈现只属于你的记录</string>
+    <string name="settings">设置</string>
+    <string name="back">返回</string>
+    <string name="skip">跳过</string>
+    <string name="next">继续</string>
+    <string name="start">开始</string>
+    <string name="done">我知道了</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="undo">撤销</string>
+    <string name="change_date">改日期</string>
+    <string name="retry">重试</string>
+    <string name="storage_error">暂时无法读取或保存数据，请重试。原有记录不会被自动删除。</string>
+    <string name="onboarding_step">第 %1$d 页，共 5 页</string>
+    <string name="promise_account">不用注册，打开就能用</string>
+    <string name="promise_local">数据只存在这台手机上，不联网</string>
+    <string name="promise_quiet">没有广告，也没有社区</string>
+    <string name="last_start_question">上次例假是哪天开始的？</string>
+    <string name="choose_date">选择日期</string>
+    <string name="unknown_date">不记得了</string>
+    <string name="cycle_question">了解你的周期</string>
+    <string name="period_length_question">一般持续几天？</string>
+    <string name="cycle_length_question">大概多久来一次？</string>
+    <plurals name="days_value"><item quantity="other">%1$d 天</item></plurals>
+    <string name="unknown">不确定</string>
+    <string name="default_unknown">暂用默认值，可以随时修改</string>
+    <string name="decrease">减少</string>
+    <string name="increase">增加</string>
+    <string name="security_optional">给记录多一份保护</string>
+    <string name="security_optional_body">你可以在设置中添加独立 PIN、指纹或面容解锁，也可以选择需要的本地提醒。</string>
+    <string name="data_notice">卸载或换机前，记得备份</string>
+    <string name="data_notice_body">因为数据只存在这台手机上，卸载或换手机前请在「设置 → 数据」导出加密备份。系统不会自动备份或迁移这些记录。</string>
+    <string name="welcome_body">例假来的时候，点下面的按钮记一下就好</string>
+    <string name="period_started">例假来了</string>
+    <string name="period_ended">例假走了</string>
+    <string name="period_day">经期第 %1$d 天</string>
+    <plurals name="period_remaining"><item quantity="other">预计还有 %1$d 天左右结束</item></plurals>
+    <string name="period_maybe_ended">快结束了吧？结束了记得点一下</string>
+    <string name="confirm_long_period">这条经期记录已持续较久，请确认结束日期</string>
+    <plurals name="days_until"><item quantity="other">距离下次经期约 %1$d 天</item></plurals>
+    <string name="due_today">经期可能今天开始</string>
+    <string name="due_today_body">来了的话点一下下面的按钮</string>
+    <plurals name="days_late"><item quantity="other">已推迟 %1$d 天</item></plurals>
+    <string name="late_common">偶尔推迟几天很常见</string>
+    <string name="late_long">推迟较久了，如果还有其他不适，可以考虑咨询医生</string>
+    <plurals name="predicted_start"><item quantity="other">预计 %1$s 开始（前后 ±%2$d 天）</item></plurals>
+    <string name="more_records_help">记录越多，预测越准</string>
+    <string name="today_log">今天的记录</string>
+    <string name="record_feeling">记一下今天的感受</string>
+    <plurals name="record_summary"><item quantity="other">已记录 %1$d 项感受</item></plurals>
+    <string name="coming_up">接下来</string>
+    <string name="fertile_range">预测易孕期：%1$s 至 %2$s</string>
+    <string name="fertility_disabled">已关闭易孕期显示</string>
+    <string name="fertility_irregular">近期周期变化较大，暂不显示易孕期预测</string>
+    <string name="fertility_out_of_range">周期不在 21–35 天范围内，暂不显示易孕期预测</string>
+    <string name="fertility_no_data">记录一次经期后，将提供预测参考</string>
+    <string name="health_short">预测仅供参考，不能用于避孕</string>
+    <string name="health_full">月汐的预测基于你的历史记录，仅供参考，不能用于避孕，也不能替代医生的诊断。</string>
+    <string name="recorded_start">已记录：%1$s 开始</string>
+    <string name="recorded_end">已记录：%1$s 结束</string>
+    <string name="recent_period_title">确定是新的一次例假吗？</string>
+    <plurals name="recent_period_body"><item quantity="other">距离上次经期结束才过了 %1$d 天。若只是少量出血，也可以记为点滴出血。</item></plurals>
+    <string name="flow_spotting">点滴</string><string name="flow_light">少</string><string name="flow_medium">中</string><string name="flow_heavy">多</string><string name="flow_very_heavy">很多</string>
+    <string name="mood_happy">开心</string><string name="mood_calm">平静</string><string name="mood_low">低落</string><string name="mood_irritable">烦躁</string><string name="mood_anxious">焦虑</string><string name="mood_sensitive">敏感</string>
+    <string name="symptom_cramps">腹痛</string><string name="symptom_back_pain">腰酸</string><string name="symptom_headache">头痛</string><string name="symptom_breast_tenderness">乳房胀痛</string><string name="symptom_bloating">腹胀</string><string name="symptom_acne">长痘</string><string name="symptom_fatigue">疲倦</string><string name="symptom_nausea">恶心</string><string name="symptom_diarrhea">腹泻</string><string name="symptom_constipation">便秘</string><string name="symptom_insomnia">失眠</string><string name="symptom_cravings">嘴馋</string><string name="symptom_dizziness">头晕</string><string name="symptom_discharge">白带增多</string><string name="symptom_cold_hands_feet">手脚冰凉</string>
+    <string name="new_period_confirm">是，新的一次</string>
+    <string name="record_spotting">只是少量出血（记为点滴出血）</string>
+    <string name="already_period">这天已经在经期里了</string>
+    <string name="previous_ongoing">上一次经期还没结束，请先结束它</string>
+    <string name="date_invalid">请检查日期：不能选未来，结束日不能早于开始日。</string>
+    <string name="no_record">这天还没有记录</string>
+    <string name="close">关闭</string>
 </resources>

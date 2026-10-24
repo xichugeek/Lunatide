@@ -6,4 +6,75 @@
     <string name="welcome">Welcome to Lunatide</string>
     <string name="tagline">No account, no network, no ads. Your cycle, yours alone.</string>
     <string name="placeholder">Your private records will appear here</string>
+    <string name="settings">Settings</string>
+    <string name="back">Back</string>
+    <string name="skip">Skip</string>
+    <string name="next">Continue</string>
+    <string name="start">Get started</string>
+    <string name="done">Got it</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="undo">Undo</string>
+    <string name="change_date">Change date</string>
+    <string name="retry">Retry</string>
+    <string name="storage_error">Unable to read or save data. Please try again. Existing records will not be erased automatically.</string>
+    <string name="onboarding_step">Page %1$d of 5</string>
+    <string name="promise_account">No account. Ready when you are.</string>
+    <string name="promise_local">Your data stays on this phone, offline</string>
+    <string name="promise_quiet">No ads or community</string>
+    <string name="last_start_question">When did your last period start?</string>
+    <string name="choose_date">Choose a date</string>
+    <string name="unknown_date">I do not remember</string>
+    <string name="cycle_question">About your cycle</string>
+    <string name="period_length_question">How many days does it usually last?</string>
+    <string name="cycle_length_question">How often does it usually start?</string>
+    <plurals name="days_value"><item quantity="one">%1$d day</item><item quantity="other">%1$d days</item></plurals>
+    <string name="unknown">Not sure</string>
+    <string name="default_unknown">Using a default for now. You can change it later.</string>
+    <string name="decrease">Decrease</string>
+    <string name="increase">Increase</string>
+    <string name="security_optional">A little extra protection</string>
+    <string name="security_optional_body">In Settings, you can add a separate PIN, fingerprint or face unlock, and choose local reminders.</string>
+    <string name="data_notice">Back up before uninstalling or switching phones</string>
+    <string name="data_notice_body">Your data lives only on this phone. Export an encrypted backup from Settings → Data before uninstalling or changing phones. System backup and automatic transfer are disabled.</string>
+    <string name="welcome_body">When your period starts, just tap the button below</string>
+    <string name="period_started">Period started</string>
+    <string name="period_ended">Period ended</string>
+    <string name="period_day">Period day %1$d</string>
+    <plurals name="period_remaining"><item quantity="one">Expected to end in about %1$d day</item><item quantity="other">Expected to end in about %1$d days</item></plurals>
+    <string name="period_maybe_ended">Has it ended? Remember to update your record.</string>
+    <string name="confirm_long_period">This period record has been open for a while. Please confirm its end date.</string>
+    <plurals name="days_until"><item quantity="one">About %1$d day until your next period</item><item quantity="other">About %1$d days until your next period</item></plurals>
+    <string name="due_today">Your period may start today</string>
+    <string name="due_today_body">Tap below if it starts</string>
+    <plurals name="days_late"><item quantity="one">%1$d day late</item><item quantity="other">%1$d days late</item></plurals>
+    <string name="late_common">A few days of variation is common</string>
+    <string name="late_long">It has been a while. If you have other symptoms, consider talking to a doctor.</string>
+    <plurals name="predicted_start"><item quantity="one">Expected %1$s (±%2$d day)</item><item quantity="other">Expected %1$s (±%2$d days)</item></plurals>
+    <string name="more_records_help">More records help improve predictions</string>
+    <string name="today_log">Today’s record</string>
+    <string name="record_feeling">Note how you feel today</string>
+    <plurals name="record_summary"><item quantity="one">%1$d feeling recorded</item><item quantity="other">%1$d feelings recorded</item></plurals>
+    <string name="coming_up">Coming up</string>
+    <string name="fertile_range">Estimated fertile window: %1$s to %2$s</string>
+    <string name="fertility_disabled">Fertile window display is off</string>
+    <string name="fertility_irregular">Your recent cycles vary a lot, so fertile window estimates are hidden</string>
+    <string name="fertility_out_of_range">Fertile window estimates are hidden for cycles outside 21–35 days</string>
+    <string name="fertility_no_data">Record a period to see estimates</string>
+    <string name="health_short">Estimates only. Do not use for contraception.</string>
+    <string name="health_full">Lunatide estimates use your history. They are for reference only, cannot be used for contraception, and do not replace medical advice.</string>
+    <string name="recorded_start">Recorded: started %1$s</string>
+    <string name="recorded_end">Recorded: ended %1$s</string>
+    <string name="recent_period_title">Is this a new period?</string>
+    <plurals name="recent_period_body"><item quantity="one">Your last period ended %1$d day ago. Light bleeding can also be recorded as spotting.</item><item quantity="other">Your last period ended %1$d days ago. Light bleeding can also be recorded as spotting.</item></plurals>
+    <string name="flow_spotting">Spotting</string><string name="flow_light">Light</string><string name="flow_medium">Medium</string><string name="flow_heavy">Heavy</string><string name="flow_very_heavy">Very heavy</string>
+    <string name="mood_happy">Happy</string><string name="mood_calm">Calm</string><string name="mood_low">Low</string><string name="mood_irritable">Irritable</string><string name="mood_anxious">Anxious</string><string name="mood_sensitive">Sensitive</string>
+    <string name="symptom_cramps">Cramps</string><string name="symptom_back_pain">Back pain</string><string name="symptom_headache">Headache</string><string name="symptom_breast_tenderness">Breast tenderness</string><string name="symptom_bloating">Bloating</string><string name="symptom_acne">Acne</string><string name="symptom_fatigue">Fatigue</string><string name="symptom_nausea">Nausea</string><string name="symptom_diarrhea">Diarrhea</string><string name="symptom_constipation">Constipation</string><string name="symptom_insomnia">Insomnia</string><string name="symptom_cravings">Cravings</string><string name="symptom_dizziness">Dizziness</string><string name="symptom_discharge">More discharge</string><string name="symptom_cold_hands_feet">Cold hands and feet</string>
+    <string name="new_period_confirm">Yes, a new period</string>
+    <string name="record_spotting">Just light bleeding (record spotting)</string>
+    <string name="already_period">This date is already part of a period</string>
+    <string name="previous_ongoing">Please end your previous period first</string>
+    <string name="date_invalid">Check the date: no future records, and the end must not precede the start.</string>
+    <string name="no_record">No record for this day yet</string>
+    <string name="close">Close</string>
 </resources>
