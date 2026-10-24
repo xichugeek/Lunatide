@@ -29,6 +29,7 @@ import java.time.LocalDate
 import kotlinx.serialization.Serializable
 import com.xichugeek.lunatide.core.security.*
 import com.xichugeek.lunatide.ui.security.SecuritySettingsScreen
+import com.xichugeek.lunatide.ui.data.*
 
 @Serializable data object Today
 @Serializable data object Calendar
@@ -36,6 +37,7 @@ import com.xichugeek.lunatide.ui.security.SecuritySettingsScreen
 @Serializable data object Settings
 @Serializable data object Reminders
 @Serializable data object Security
+@Serializable data object DataSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,13 +53,10 @@ fun LunatideRoot(
     notificationsGranted: Boolean = false, onOnboardingDraft: (OnboardingDraft) -> Unit = {},
     lock: LockUiState = LockUiState(), biometricAvailable: Boolean = false,
     onPin: (PinMode) -> Unit = {}, onSettings: ((AppSettings) -> AppSettings) -> Unit = {},
+    dataActions: DataActions = DataActions(),
 ) {
     if (state.failed) {
-        Surface(Modifier.fillMaxSize()) {
-            Column(Modifier.safeDrawingPadding().padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(stringResource(R.string.storage_error)); Button(onClick = onRetry) { Text(stringResource(R.string.retry)) }
-            }
-        }; return
+        RecoveryScreen(dataActions, onRetry); return
     }
     if (!state.ready) { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }; return }
     if (!state.settings.onboardingCompleted) {
@@ -72,7 +71,7 @@ fun LunatideRoot(
     val route = entry?.destination?.route
     var changeDate by remember { mutableStateOf(false) }
     Scaffold(bottomBar = {
-        if (route !in listOf(Settings::class.qualifiedName, Reminders::class.qualifiedName, Security::class.qualifiedName)) NavigationBar {
+        if (route !in listOf(Settings::class.qualifiedName, Reminders::class.qualifiedName, Security::class.qualifiedName, DataSettings::class.qualifiedName)) NavigationBar {
             val destinations = listOf(Triple(Today, R.string.today, R.drawable.ic_today), Triple(Calendar, R.string.calendar, R.drawable.ic_calendar), Triple(Statistics, R.string.statistics, R.drawable.ic_stats))
             destinations.forEach { (destination, label, icon) ->
                 NavigationBarItem(selected = route == destination::class.qualifiedName,
@@ -107,11 +106,13 @@ fun LunatideRoot(
                         Text(stringResource(R.string.settings), style = MaterialTheme.typography.headlineMedium)
                         TextButton(onClick = { nav.navigate(Reminders) }) { Text(stringResource(R.string.reminders)) }
                         TextButton(onClick = { nav.navigate(Security) }) { Text(stringResource(R.string.security_title)) }
+                        TextButton(onClick = { nav.navigate(DataSettings) }) { Text(stringResource(R.string.data_title)) }
                         Text(stringResource(R.string.promise_local)); Text(stringResource(R.string.data_notice_body)); Text(stringResource(R.string.health_full))
                     }
                 }
                 composable<Reminders> { ReminderSettingsScreen(reminder, notificationsGranted, reminderActions) { nav.popBackStack() } }
                 composable<Security> { SecuritySettingsScreen(lock, biometricAvailable, onPin, onSettings) { nav.popBackStack() } }
+                composable<DataSettings> { DataSettingsScreen(dataActions) { nav.popBackStack() } }
             }
         }
     }

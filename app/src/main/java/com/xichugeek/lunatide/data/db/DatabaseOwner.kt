@@ -24,6 +24,7 @@ class DatabaseOwner @Inject constructor(
     @Synchronized
     fun get(): LunatideDatabase {
         database?.let { return it }
+        DatabaseRecovery.finishPending(context)
         val password = keys.password()
         var candidate: LunatideDatabase? = null
         try {

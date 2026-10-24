@@ -18,7 +18,7 @@ class DataUnavailable(cause: Throwable? = null) : Exception("Local data cannot b
 /** Wraps a random database password; never regenerates a key for existing inaccessible data. */
 class DatabaseKeyManager(
     private val keyFile: File, private val databaseFile: File,
-    private val alias: String = "lunatide_db_kek",
+    internal val alias: String = "lunatide_db_kek",
 ) {
     private fun store() = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
 

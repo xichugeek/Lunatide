@@ -15,17 +15,18 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 /** No personalized keyboard learning, correction, suggestions, or Android view-state persistence. */
 @Composable
-fun PrivateTextInput(value: String, hint: String, decimal: Boolean = false, enabled: Boolean = true, onChange: (String) -> Unit) {
+fun PrivateTextInput(value: String, hint: String, decimal: Boolean = false, enabled: Boolean = true, password: Boolean = false, onChange: (String) -> Unit) {
     val callback by rememberUpdatedState(onChange)
     val foreground = MaterialTheme.colorScheme.onSurface.toArgb()
     val muted = MaterialTheme.colorScheme.onSurfaceVariant.toArgb()
-    AndroidView(modifier = Modifier.fillMaxWidth().heightIn(min = if (decimal) 56.dp else 100.dp), factory = { context ->
+    AndroidView(modifier = Modifier.fillMaxWidth().heightIn(min = if (decimal || password) 56.dp else 100.dp), factory = { context ->
         EditText(context).apply {
             isSaveEnabled = false
-            inputType = if (decimal) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            inputType = if (password) InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                else if (decimal) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
                 else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             imeOptions = imeOptions or EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
-            filters = arrayOf(InputFilter.LengthFilter(if (decimal) 8 else 500))
+            filters = arrayOf(InputFilter.LengthFilter(if (password) 256 else if (decimal) 8 else 500))
             setText(value)
             addTextChangedListener { callback(it?.toString().orEmpty()) }
         }

@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.work.WorkManager
 import com.xichugeek.lunatide.data.db.DatabaseOwner
+import com.xichugeek.lunatide.data.db.DatabaseRecovery
 import com.xichugeek.lunatide.data.settings.*
 import com.xichugeek.lunatide.reminder.ReminderCoordinator
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,6 +24,7 @@ class AppDataReset @Inject constructor(
         WorkManager.getInstance(context).cancelAllWork().result.get()
         context.getSystemService(NotificationManager::class.java).cancelAll()
         owner.remove()
+        DatabaseRecovery.clear(context)
         settings.clear()
         security.clear()
     }

@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import com.xichugeek.lunatide.core.security.*
 import com.xichugeek.lunatide.core.time.TodayProvider
 import com.xichugeek.lunatide.ui.security.PinScreen
+import com.xichugeek.lunatide.ui.data.*
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
@@ -44,6 +45,7 @@ class MainActivity : FragmentActivity() {
     private val editor: DayLogViewModel by viewModels()
     private val stats: StatsViewModel by viewModels()
     private val reminder: ReminderViewModel by viewModels()
+    private val data: DataViewModel by viewModels()
     @Inject lateinit var reminders: ReminderCoordinator
     @Inject lateinit var appLock: AppLockController
     @Inject lateinit var clock: TodayProvider
@@ -53,6 +55,9 @@ class MainActivity : FragmentActivity() {
         notificationsGranted.value = notificationPermissionGranted(this)
         reminders.refresh()
     }
+    private val backupSave = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { appLock.externalReturned(); data.save(it) }
+    private val csvSave = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { appLock.externalReturned(); data.save(it) }
+    private val backupOpen = registerForActivityResult(ActivityResultContracts.OpenDocument()) { appLock.externalReturned(); data.selected(it) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
@@ -75,6 +80,19 @@ class MainActivity : FragmentActivity() {
                     PinScreen(lock, appLock::digit, appLock::submit, appLock::dismiss,
                         { showBiometric(this@MainActivity, appLock::biometricSuccess, appLock::biometricError) }, appLock::erase)
                 } else {
+                    val dataState by data.state.collectAsState()
+                    val dataActions = DataActions(data::export, { recovery -> data.beginImport(recovery); appLock.externalJump(); backupOpen.launch(arrayOf("*/*")) }, data::csv, appLock::erase)
+                    LaunchedEffect(dataState.stage) {
+                        if (dataState.stage == DataStage.BACKUP_READY || dataState.stage == DataStage.CSV_READY) {
+                            val csv = dataState.stage == DataStage.CSV_READY
+                            data.consumeReady(); appLock.externalJump()
+                            if (csv) csvSave.launch(data.filename(true)) else backupSave.launch(data.filename(false))
+                        }
+                    }
+                    LaunchedEffect(dataState.restart) { if (dataState.restart) {
+                        reminders.start()
+                        startActivity(Intent(this@MainActivity, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)); finish()
+                    } }
                     val state by today.state.collectAsState()
                     val actions by today.actions.collectAsState()
                     val onboardingState by onboarding.state.collectAsState()
@@ -87,7 +105,10 @@ class MainActivity : FragmentActivity() {
                         { date, recent, revise -> today.record(date, recent, revise) }, today::undo, today::spotting, today::clearMessage, today::retry,
                         calendarState, calendar::move, calendar::today, editorState, editor.actions, editor::open, statsState, calendar::show,
                         reminderState, reminder.actions.copy(requestPermission = ::requestNotifications, systemSettings = ::openSystemSettings), granted, onboarding::draft,
-                        lock, biometricAuthenticators(this@MainActivity) != null, appLock::begin, appLock::update)
+                        lock, biometricAuthenticators(this@MainActivity) != null, appLock::begin, appLock::update, dataActions)
+                    DataDialogs(dataState, data::cancel,
+                        { if (dataState.stage == DataStage.EXPORT_PASSWORD) data.encrypt(it) else data.decrypt(it) },
+                        data::restore, { data.prepareCsv(csvLabels(this@MainActivity)) }, data::closeResult)
                 }
             }
         }
