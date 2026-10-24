@@ -104,4 +104,18 @@
     <string name="tip_long_periods">Your recent periods have lasted longer. If this comes with heavy flow or significant discomfort, consider talking to a doctor.</string>
     <string name="tip_irregular">Your recent cycle lengths vary more. Stress, sleep, and weight changes can all play a part. If this continues, consider talking to a doctor.</string>
     <string name="tip_pain">Your recent period pain has been significant. If it affects your daily life, consider talking to a doctor.</string>
+    <string name="reminders">Reminders</string><string name="reminder_upcoming">Upcoming period</string><string name="reminder_start">Period may start</string><string name="reminder_end">Update period end</string><string name="reminder_daily">Daily record</string><string name="reminder_fertile">Fertile window reminder</string>
+    <string name="reminder_time">Reminder time: %1$s</string><string name="reminder_time_title">Reminder time</string><string name="reminder_timing_note">The system may deliver reminders several minutes later. Delivery is not exact to the minute.</string>
+    <plurals name="days_before"><item quantity="one">%1$d day before</item><item quantity="other">%1$d days before</item></plurals>
+    <string name="notification_private_mode">Private notifications</string><string name="notification_private_body">Use neutral notification text. Turning this off reveals details about your period. Public lock screen content always stays neutral.</string>
+    <string name="notification_permission_off">Notifications are not enabled</string><string name="enable_notifications">Enable notifications</string><string name="open_system_settings">Open system settings</string>
+    <string name="reminder_fertility_off">Fertile window display must be on and prediction conditions met before reminders can be sent.</string>
+    <string name="reminder_schedule_error">Unable to schedule reminders. Open Lunatide again and check your settings. Existing health records will be kept.</string>
+    <string name="reminder_help_title">Missing reminders?</string><string name="reminder_help">Allow notifications and auto-start in system settings, and check that battery settings do not restrict background activity. Settings vary by phone brand. The system may still delay reminders.</string>
+    <string name="notification_public">You have a reminder</string>
+    <string name="private_upcoming">Take a little extra care of yourself over the next few days</string><string name="private_start">There is a record to check today</string><string name="private_end">A record is ready for an update</string><string name="private_daily">How are you feeling today?</string><string name="private_fertile">You have a new reminder</string>
+    <plurals name="detailed_upcoming"><item quantity="one">Your period is estimated to start in %1$d day. Take a moment to prepare.</item><item quantity="other">Your period is estimated to start in %1$d days. Take a moment to prepare.</item></plurals>
+    <string name="detailed_start">Your period may start today. Record it if it does.</string>
+    <plurals name="detailed_end"><item quantity="one">This period has lasted %1$d day. Record its end when ready.</item><item quantity="other">This period has lasted %1$d days. Record its end when ready.</item></plurals>
+    <string name="detailed_fertile">Your estimated fertile window starts today (for reference only, not contraception)</string>
 </resources>

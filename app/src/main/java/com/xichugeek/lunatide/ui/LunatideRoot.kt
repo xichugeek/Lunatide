@@ -23,6 +23,8 @@ import com.xichugeek.lunatide.ui.calendar.CalendarScreen
 import com.xichugeek.lunatide.ui.calendar.CalendarUiState
 import com.xichugeek.lunatide.ui.daylog.*
 import com.xichugeek.lunatide.ui.stats.*
+import com.xichugeek.lunatide.ui.settings.*
+import com.xichugeek.lunatide.domain.reminder.ReminderKind
 import java.time.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -30,6 +32,7 @@ import kotlinx.serialization.Serializable
 @Serializable data object Calendar
 @Serializable data object Statistics
 @Serializable data object Settings
+@Serializable data object Reminders
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +44,8 @@ fun LunatideRoot(
     onMoveMonth: (Int) -> Unit = {}, onCalendarToday: () -> Unit = {},
     editor: DayEditorState? = null, editorActions: DayEditorActions = DayEditorActions(), onOpenDay: (LocalDate) -> Unit = {},
     stats: StatsUiState = StatsUiState(), onShowMonth: (LocalDate) -> Unit = {},
+    reminder: ReminderUiState = ReminderUiState(), reminderActions: ReminderActions = ReminderActions(),
+    notificationsGranted: Boolean = false, onOnboardingDraft: (OnboardingDraft) -> Unit = {},
 ) {
     if (state.failed) {
         Surface(Modifier.fillMaxSize()) {
@@ -50,13 +55,18 @@ fun LunatideRoot(
         }; return
     }
     if (!state.ready) { Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }; return }
-    if (!state.settings.onboardingCompleted) { OnboardingScreen(state.today, onboarding, onFinish); return }
+    if (!state.settings.onboardingCompleted) {
+        OnboardingScreen(state.today, onboarding, onDraft = onOnboardingDraft,
+            remindersEnabled = state.settings.reminderUpcomingEnabled && notificationsGranted,
+            onReminderToggle = { enabled -> reminderActions.enabled(ReminderKind.UPCOMING, enabled); if (enabled && !notificationsGranted) reminderActions.requestPermission() }, onFinish = onFinish)
+        return
+    }
     val nav = rememberNavController()
     val entry by nav.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     var changeDate by remember { mutableStateOf(false) }
     Scaffold(bottomBar = {
-        if (route != Settings::class.qualifiedName) NavigationBar {
+        if (route !in listOf(Settings::class.qualifiedName, Reminders::class.qualifiedName)) NavigationBar {
             val destinations = listOf(Triple(Today, R.string.today, R.drawable.ic_today), Triple(Calendar, R.string.calendar, R.drawable.ic_calendar), Triple(Statistics, R.string.statistics, R.drawable.ic_stats))
             destinations.forEach { (destination, label, icon) ->
                 NavigationBarItem(selected = route == destination::class.qualifiedName,
@@ -89,9 +99,11 @@ fun LunatideRoot(
                     Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         TextButton(onClick = { nav.popBackStack() }) { Text(stringResource(R.string.back)) }
                         Text(stringResource(R.string.settings), style = MaterialTheme.typography.headlineMedium)
+                        TextButton(onClick = { nav.navigate(Reminders) }) { Text(stringResource(R.string.reminders)) }
                         Text(stringResource(R.string.promise_local)); Text(stringResource(R.string.data_notice_body)); Text(stringResource(R.string.health_full))
                     }
                 }
+                composable<Reminders> { ReminderSettingsScreen(reminder, notificationsGranted, reminderActions) { nav.popBackStack() } }
             }
         }
     }

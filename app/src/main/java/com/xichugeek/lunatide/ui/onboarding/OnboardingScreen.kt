@@ -5,7 +5,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,15 +17,13 @@ import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import java.time.LocalDate
 
 @Composable
-fun OnboardingScreen(today: LocalDate, state: OnboardingState, onFinish: (LocalDate?, Int?, Int?) -> Unit) {
-    var page by rememberSaveable { mutableIntStateOf(0) }
-    var lastDay by rememberSaveable { mutableStateOf<Long?>(null) }
-    var period by rememberSaveable { mutableIntStateOf(5) }
-    var cycle by rememberSaveable { mutableIntStateOf(28) }
-    var periodKnown by rememberSaveable { mutableStateOf(false) }
-    var cycleKnown by rememberSaveable { mutableStateOf(false) }
+fun OnboardingScreen(today: LocalDate, state: OnboardingState, onDraft: (OnboardingDraft) -> Unit = {},
+    remindersEnabled: Boolean = false, onReminderToggle: (Boolean) -> Unit = {}, onFinish: (LocalDate?, Int?, Int?) -> Unit) {
+    val draft = state.draft
+    val page = draft.page
+    val lastDay = draft.start
     var chooseDate by remember { mutableStateOf(false) }
-    fun finish() = onFinish(lastDay?.let(LocalDate::ofEpochDay), cycle.takeIf { cycleKnown }, period.takeIf { periodKnown })
+    fun finish() = onFinish(lastDay, draft.cycle.takeIf { draft.cycleKnown }, draft.period.takeIf { draft.periodKnown })
     Scaffold { padding ->
         Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.TopCenter) {
             Column(Modifier.widthIn(max = 600.dp).fillMaxWidth().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
@@ -43,17 +40,21 @@ fun OnboardingScreen(today: LocalDate, state: OnboardingState, onFinish: (LocalD
                     }
                     1 -> {
                         Text(stringResource(R.string.last_start_question), style = MaterialTheme.typography.headlineMedium)
-                        OutlinedButton(onClick = { chooseDate = true }) { Text(lastDay?.let { LocalDate.ofEpochDay(it).toString() } ?: stringResource(R.string.choose_date)) }
-                        TextButton(onClick = { lastDay = null; page++ }) { Text(stringResource(R.string.unknown_date)) }
+                        OutlinedButton(onClick = { chooseDate = true }) { Text(lastDay?.toString() ?: stringResource(R.string.choose_date)) }
+                        TextButton(onClick = { onDraft(draft.copy(start = null, page = page + 1)) }) { Text(stringResource(R.string.unknown_date)) }
                     }
                     2 -> {
                         Text(stringResource(R.string.cycle_question), style = MaterialTheme.typography.headlineMedium)
-                        LengthSelector(R.string.period_length_question, period, 2..10, periodKnown, { period = it; periodKnown = true }, { periodKnown = false })
-                        LengthSelector(R.string.cycle_length_question, cycle, 20..45, cycleKnown, { cycle = it; cycleKnown = true }, { cycleKnown = false })
+                        LengthSelector(R.string.period_length_question, draft.period, 2..10, draft.periodKnown, { onDraft(draft.copy(period = it, periodKnown = true)) }, { onDraft(draft.copy(periodKnown = false)) })
+                        LengthSelector(R.string.cycle_length_question, draft.cycle, 20..45, draft.cycleKnown, { onDraft(draft.copy(cycle = it, cycleKnown = true)) }, { onDraft(draft.copy(cycleKnown = false)) })
                     }
                     3 -> {
                         Text(stringResource(R.string.security_optional), style = MaterialTheme.typography.headlineMedium)
                         Text(stringResource(R.string.security_optional_body), style = MaterialTheme.typography.bodyLarge)
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Text(stringResource(R.string.reminder_upcoming), Modifier.weight(1f))
+                            Switch(remindersEnabled, onReminderToggle)
+                        }
                     }
                     4 -> {
                         Text(stringResource(R.string.data_notice), style = MaterialTheme.typography.headlineMedium)
@@ -62,14 +63,14 @@ fun OnboardingScreen(today: LocalDate, state: OnboardingState, onFinish: (LocalD
                 }
                 if (state.failed) Text(stringResource(R.string.storage_error), color = MaterialTheme.colorScheme.error)
                 if (state.busy) CircularProgressIndicator()
-                Button(onClick = { if (page < 4) page++ else finish() }, enabled = !state.busy, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)) {
+                Button(onClick = { if (page < 4) onDraft(draft.copy(page = page + 1)) else finish() }, enabled = !state.busy, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)) {
                     Text(stringResource(if (page == 0) R.string.start else if (page == 4) R.string.done else R.string.next))
                 }
-                if (page > 0) TextButton(onClick = { page-- }, enabled = !state.busy) { Text(stringResource(R.string.back)) }
+                if (page > 0) TextButton(onClick = { onDraft(draft.copy(page = page - 1)) }, enabled = !state.busy) { Text(stringResource(R.string.back)) }
             }
         }
     }
-    if (chooseDate) PastDatePicker(today, lastDay?.let(LocalDate::ofEpochDay) ?: today.minusDays(28), onDismiss = { chooseDate = false }) { lastDay = it.toEpochDay(); chooseDate = false }
+    if (chooseDate) PastDatePicker(today, lastDay ?: today.minusDays(28), onDismiss = { chooseDate = false }) { onDraft(draft.copy(start = it)); chooseDate = false }
 }
 
 @Composable

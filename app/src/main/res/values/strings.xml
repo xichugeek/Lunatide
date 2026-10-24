@@ -104,4 +104,18 @@
     <string name="tip_long_periods">最近几次经期持续时间偏长，如果同时伴随经量很多或明显不适，可以咨询医生。</string>
     <string name="tip_irregular">最近几个周期长度变化较大。压力、作息、体重变化都可能有影响，如果持续这样，可以咨询医生。</string>
     <string name="tip_pain">最近几次痛经比较明显，如果影响到日常生活，可以咨询医生。</string>
+    <string name="reminders">提醒</string><string name="reminder_upcoming">经期临近</string><string name="reminder_start">经期可能开始</string><string name="reminder_end">记得记录结束</string><string name="reminder_daily">每日记录</string><string name="reminder_fertile">易孕期提醒</string>
+    <string name="reminder_time">提醒时间：%1$s</string><string name="reminder_time_title">提醒时间</string><string name="reminder_timing_note">系统可能延后几分钟到十几分钟送达提醒，不保证精确到分钟。</string>
+    <plurals name="days_before"><item quantity="other">提前 %1$d 天</item></plurals>
+    <string name="notification_private_mode">通知隐私模式</string><string name="notification_private_body">开启后通知正文使用中性文案；关闭后正文会出现经期等信息。锁屏公开内容始终保持中性。</string>
+    <string name="notification_permission_off">通知权限未开启</string><string name="enable_notifications">开启通知</string><string name="open_system_settings">去系统设置</string>
+    <string name="reminder_fertility_off">需要在周期设置中开启易孕期显示，且预测条件满足时才会提醒。</string>
+    <string name="reminder_schedule_error">暂时无法安排提醒，请重新打开月汐检查设置。已有健康记录不会被清空。</string>
+    <string name="reminder_help_title">收不到提醒？</string><string name="reminder_help">请在系统设置中允许月汐通知和自启动，并确认电池设置未限制后台活动。不同品牌的位置不同，系统仍可能延后提醒。</string>
+    <string name="notification_public">你有一条提醒</string>
+    <string name="private_upcoming">最近几天记得照顾好自己</string><string name="private_start">今天有一条待确认的记录</string><string name="private_end">有一条记录等你更新</string><string name="private_daily">今天过得怎么样？</string><string name="private_fertile">有一条新提醒</string>
+    <plurals name="detailed_upcoming"><item quantity="other">经期预计 %1$d 天后开始，记得提前准备</item></plurals>
+    <string name="detailed_start">经期可能今天开始，来了记得记一下</string>
+    <plurals name="detailed_end"><item quantity="other">这次经期已经 %1$d 天了，结束了记得点一下</item></plurals>
+    <string name="detailed_fertile">预测易孕期今天开始（仅供参考，不能用于避孕）</string>
 </resources>

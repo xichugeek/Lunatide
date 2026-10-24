@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- 当前里程碑：M5 已完成，准备 M6 提醒；引导的提醒/PIN 可选设置分别待 M6/M7 接通
-- 最近一次构建：四项检查成功（2026-10-24）；累计 88 个 JVM 测试通过；数据库仪器测试最近一次为 M4 的 7 个通过；Lint 0 error、原有 1 warning
+- 当前里程碑：M6 已完成，准备 M7 应用锁；引导 PIN 可选设置待 M7 接通
+- 最近一次构建：四项检查成功（2026-10-24）；累计 102 个 JVM 测试、9 个仪器测试通过；Lint 0 error、原有 1 warning
 - 阻塞问题：无；原 SDK 缺失已自行修复
 
 ## 环境
@@ -29,6 +29,15 @@
 
 ## 里程碑记录
 
+### M6 · 提醒 —— ✅ 实现完成（2026-10-24）
+- 完成内容：5 种本地通知、双语言隐私正文与中性 publicVersion、按类型唯一 WorkManager 调度与每日兜底重算、数据/设置/前台日期变化重算、Worker 发送前复核；设置页与引导接入、用户主动申请权限、拒绝后引导及 ROM 说明。
+- 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（新增 14，累计 102 tests，0 failures/errors）/ `lintDebug` ✅（0 error、原有 1 warning）/ `assembleDebug` ✅ / `connectedDebugAndroidTest` ✅（新增 2，累计 9 tests，0 failures/errors/skipped）。
+- 设备走查：首次打开未弹通知权限；点开启通知才出现系统权限框；实际拒绝后显示权限未开启及去系统设置。中英文、全部五类通知的隐私正文与 publicVersion 由仪器测试核对。D2 两分钟实际送达、D4 系统锁屏渲染、D6 设备重启后送达 ⏭ 未验证，不以构建或通知对象测试代替。
+- 验收：A1～A5 ✅（人工审阅依赖新增仅 AndroidX Work 相关）；D1、D3 ✅；D5 纯函数测试 ✅、设备送达未验证；G8～G9 ✅。临时加入状态存档 API 的负向验证按预期失败，恢复后全检查成功。debug/release Manifest 无网络权限、无额外导出页面。
+- 决策：D-012；引导日期草稿移至 ViewModel 内存并加强禁用状态存档 API 检查；系统 JobService 仅允许系统签名权限保护的导出例外。
+- 提交：本次 `feat(reminders): 实现离线隐私提醒与权限引导`。
+- M5 提交与推送：`121e921` 已成功推送 `origin/main`。
+- 下一步：M7 应用锁与隐私设置；定时送达和重启恢复设备验收仍待补充。
 ### M5 · 统计页 —— ✅ 完成（2026-10-24）
 - 完成内容：概览、周期/经期长度 Canvas 柱图、最近 12 个完整记录、平均虚线与 21–35 天背景带、症状 Top 5、痛经分布、全部历史及点击跳转月份、温和提示、少于两次经期空状态；独立 StatsViewModel 与每根柱子语义描述；补齐每日记录经期开关无障碍标签。
 - 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（新增 3，累计 88 tests，0 failures/errors）/ `lintDebug` ✅（0 error、原有 1 warning）/ `assembleDebug` ✅；仪器测试本次未重复执行（统计/UI 变更，M4 的 7 个通过结果保留）。

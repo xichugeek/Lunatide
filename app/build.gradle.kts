@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.datastore)
     implementation(libs.sqlcipher)
     implementation(libs.coroutines)
+    implementation(libs.work)
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
     debugImplementation(libs.compose.tooling)
@@ -127,6 +128,16 @@ androidComponents.onVariants { variant ->
                 check(app.getAttributeNS(ns, "fullBackupContent") == "false") { "隐私检查失败：必须禁用旧版备份" }
                 check(app.getAttributeNS(ns, "dataExtractionRules") == "@xml/data_extraction_rules") { "隐私检查失败：缺少数据提取规则" }
                 check(app.getAttributeNS(ns, "usesCleartextTraffic") != "true") { "隐私检查失败：不允许明文通信" }
+                listOf("activity", "activity-alias", "service", "receiver", "provider").forEach { tag ->
+                    val nodes = app.getElementsByTagName(tag)
+                    for (i in 0 until nodes.length) {
+                        val node = nodes.item(i) as org.w3c.dom.Element
+                        val name = node.getAttributeNS(ns, "name")
+                        val allowed = name == "com.xichugeek.lunatide.MainActivity" ||
+                            (name == "androidx.work.impl.background.systemjob.SystemJobService" && node.getAttributeNS(ns, "permission") == "android.permission.BIND_JOB_SERVICE")
+                        check(allowed || node.getAttributeNS(ns, "exported") != "true") { "隐私检查失败：不允许导出的组件 $name" }
+                    }
+                }
             }
         }
         verifyManifestPermissions.configure { dependsOn(verifyVariant) }
@@ -165,7 +176,7 @@ val verifyDependencies = tasks.register("verifyDependencies") {
 val verifySourceForbiddenApis = tasks.register("verifySourceForbiddenApis") {
     group = "verification"
     doLast {
-        val forbidden = listOf("java.net.", "HttpURLConnection", "okhttp", "retrofit", "io.ktor", "WebView", "DownloadManager", "Settings.Secure.ANDROID_ID", "getDeviceId", "AdvertisingIdClient", "getImei")
+        val forbidden = listOf("java.net.", "HttpURLConnection", "okhttp", "retrofit", "io.ktor", "WebView", "DownloadManager", "Settings.Secure.ANDROID_ID", "getDeviceId", "AdvertisingIdClient", "getImei", "rememberSaveable", "SavedStateHandle")
         val exceptions = file("privacy-allowlist.txt").readLines().filter { it.isNotBlank() && !it.startsWith('#') }.toSet()
         fileTree("src/main") { include("**/*.kt", "**/*.java") }.forEach { source ->
             val path = source.relativeTo(projectDir).invariantSeparatorsPath

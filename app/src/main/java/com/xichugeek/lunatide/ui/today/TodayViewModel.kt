@@ -48,7 +48,7 @@ class TodayViewModel @Inject constructor(
     val state: StateFlow<TodayUiState> = retry.flatMapLatest {
         combine(cycles.periods, logs.logs, settings.settings, clock.today) { periods, logs, settings, today ->
             withContext(Dispatchers.Default) {
-                TodayUiState(true, false, periods, logs, settings, today, predict(periods, today, settings.predictionConfig()))
+                TodayUiState(true, false, periods, logs, settings, today, predict(periods, today, settings.toPredictionConfig()))
             }
         }.catch { error -> if (error is CancellationException) throw error; emit(TodayUiState(failed = true, today = clock.today.value)) }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, TodayUiState(today = clock.today.value))
@@ -96,5 +96,3 @@ class TodayViewModel @Inject constructor(
         }
     }
 }
-
-fun AppSettings.predictionConfig() = PredictionConfig(manualCycleLength, manualPeriodLength, initialCycleLength, initialPeriodLength, showFertility = showFertility)

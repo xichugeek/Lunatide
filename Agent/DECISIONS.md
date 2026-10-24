@@ -88,3 +88,13 @@
 - 图表展示最近 12 个实际完整周期/已结束经期，均值遵循 06 的有效记录过滤；不以预测代替实际统计。图表用 Canvas 绘制，每根柱子提供独立语义描述，可横向滚动。
 - 历史显示全部周期，最新周期显示实际进行天数；点击跳转日历对应月份。症状与痛经分布只统计最近 6 个周期。
 - 空状态以经期记录少于 2 次判断；规律性不足 3 个有效周期时明确显示数据不足，不猜测规律性。
+
+## D-012 · 提醒调度与附加隐私加固（2026-10-24）
+- 采用 WorkManager 2.12.0 与 Hilt 注入的自定义 WorkerFactory，不引入额外集成库。移除默认初始化器以使用 Application 的 Configuration.Provider；Worker 输入仅含提醒类型，不放健康日期、备注或症状。
+- 无网络约束、无精确闹钟、无前台任务；移除网络、前台服务权限与未使用的前台服务组件。保留系统签名权限 BIND_JOB_SERVICE 保护的 SystemJobService 导出，这是系统调度必需的入口；建议 08 的“其他组件一律不导出”明确此系统组件例外。额外 Manifest 检查只允许该例外和 Launcher。
+- 移除 EmojiCompat 自动字体加载初始化器、ProfileInstallReceiver、DiagnosticsReceiver 和 debug PreviewActivity，缩小隐式外部行为与导出入口；IDE 静态 Compose Preview 保留。
+- 隐私模式默认开启，所有实际通知 visibility=PRIVATE 并提供固定中性 publicVersion；库日志阈值仅设为 ERROR（Log.ERROR 为常量，非输出用户数据的日志调用），release 继续用 R8 去日志。
+- 到点后台冷启动时，保留已经到期的任务，防止启动时重新调度误取消通知；运行后的重算放到独立延迟 1 秒的任务，避免替换正在执行的自身任务。易孕期提醒按未被“今天”截断前的首个有效日期判断，避免每天重复提醒。
+- 引导全部草稿放 ViewModel 内存，日期选择器采用 remember + DatePickerState 工厂，不使用保存日期的 rememberSaveable；旋转保留引导草稿，进程结束不落系统状态存档。已完成记录仍只在 SQLCipher 中保存。
+- Lint 对 ProfileInstallReceiver 的移除标记报告 MissingClass；仅对此 tools:node=remove 节点局部忽略。最终 Manifest 中该组件确实不存在；未对实际注册组件关闭 MissingClass 检查。
+- 源码检查额外禁止直接使用记忆状态存档 API（rememberSaveable、SavedStateHandle），防止后续健康字段误写系统状态；当前手写 UI 状态均采用 ViewModel/内存，不需要非健康字段豁免。
