@@ -59,10 +59,20 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.serialization.json)
     implementation(libs.hilt.android)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.datastore)
+    implementation(libs.sqlcipher)
+    implementation(libs.coroutines)
+    ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
     debugImplementation(libs.compose.tooling)
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.test.ext)
 }
+ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 
 val allowedPermissions = setOf(
     "android.permission.POST_NOTIFICATIONS", "android.permission.USE_BIOMETRIC",
@@ -126,6 +136,7 @@ val verifyDependencies = tasks.register("verifyDependencies") {
                 "javax.inject:javax.inject", "jakarta.inject:jakarta.inject-api",
                 "org.jspecify:jspecify", "org.jetbrains:annotations",
                 "com.google.code.findbugs:jsr305", "com.google.guava:listenablefuture",
+                "com.squareup.okio:okio", "com.squareup.okio:okio-jvm",
             )) {
                 "隐私检查失败：不在依赖白名单 $id，请审查并记录 DECISIONS.md"
             }

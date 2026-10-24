@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- 当前里程碑：M0 已完成，准备 M1 数据层
-- 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug assembleDebug` 成功（2026-10-24）；单元测试为 NO-SOURCE（0 个），不视为业务测试通过
+- 当前里程碑：M1 已完成，准备 M2 预测引擎与统计
+- 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug assembleDebug connectedDebugAndroidTest` 成功（2026-10-24）；30 个 JVM 测试、5 个设备仪器测试全部通过
 - 阻塞问题：无；原 SDK 缺失已自行修复
 
 ## 环境
@@ -13,11 +13,11 @@
 | 项 | 结果 |
 |---|---|
 | 操作系统 | Windows NT 10.0.26100.0；PowerShell 7.6.5；检查日期 2026-10-24（Asia/Shanghai） |
-| JDK | `java -version`：OpenJDK / Android Studio JBR 21.0.9，64 位；`javac.exe` 存在；`JAVA_HOME=D:\Program Files\Android\Android Studio\jbr`。尚未配置或验证 Gradle 的 Java 17 toolchain。 |
-| Android SDK 路径 / 已安装平台 | `ANDROID_HOME` 与 `ANDROID_SDK_ROOT` 均为 `D:\Android\Sdk`；仅有 `platforms/android-36.1/android.jar`。Build Tools 已安装 36.0.0、36.1.0、37.0.0。缺少 API 37 SDK Platform；未安装 `cmdline-tools`，无 `local.properties`。 |
-| Gradle / AGP / Kotlin 版本 | 尚未创建工程或锁定版本；PATH 无 Gradle。官方在线元数据查询：Gradle current 9.8.2、AGP 最新稳定 9.4.1、Kotlin 最新稳定 2.4.21；这些仅是查询结果，未下载、未验证兼容组合。 |
-| 依赖下载是否正常 | Google Maven 的 AGP 元数据、Maven Central 的 Kotlin 元数据、Gradle 版本端点均 HTTP 200；Android SDK 官方包索引可读。仅验证这些端点可访问，尚未执行 Gradle 完整依赖解析或构建。 |
-| 可用设备（adb devices） | 使用 SDK 内 `platform-tools/adb.exe devices -l`，列表为空。`emulator.exe -list-avds` 返回 `Pixel_7`；模拟器未启动，运行能力未验证。设备测试均未验证。 |
+| JDK | Gradle 运行于 Android Studio JBR 21.0.9；另安装 Temurin JDK 17.0.20.1，`jvmToolchain(17)` 已通过真实编译与 JVM 测试验证。 |
+| Android SDK 路径 / 已安装平台 | SDK 为 `D:\Android\Sdk`；Platform 36.1、37.2；Build Tools 36.0.0、36.1.0、37.0.0；Command-line Tools 23.0。已创建被 Git 忽略的 `local.properties`。 |
+| Gradle / AGP / Kotlin 版本 | 已锁定并构建验证：Gradle 9.8.2、AGP 9.4.1、Kotlin 2.4.21、KSP 2.3.12、Hilt 2.60.1；其余版本见 Version Catalog。 |
+| 依赖下载是否正常 | Google Maven、Maven Central 与 Gradle 官方分发实际下载成功；M0、M1 完整依赖解析、编译、测试和 APK 构建成功。 |
+| 可用设备（adb devices） | 已启动 Pixel_7 / emulator-5554，Android API 35，1080×2400；WHPX 可用；M0 启动导航走查与 M1 的 5 个仪器测试通过。没有验证其他 API 或实体手机。 |
 
 ### 环境检查依据与恢复步骤（2026-10-24）
 
@@ -28,6 +28,17 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### M1 · 数据层 —— ✅ 完成（2026-10-24）
+- 完成内容：三张 Room 表与 DAO、显式领域映射、稳定枚举、百分度体温、schema v1 导出；SQLCipher + Keystore AES-GCM 包裹随机口令；可注入工厂、非破坏性错误；DataStore 设置与可注入 TodayProvider；周期/日志 Repository 与事务化经期编辑。
+- 测试：新增 30 个 JVM 测试覆盖 05 §3 的新建、进行中限制、相邻扩展、桥接合并、历史补录、近 10 天确认、首尾/中间/单日删除、未来日期、体温备注边界、跨年闰年等；5 个真实仪器测试覆盖 SQLCipher 读写重开、错误口令、非明文文件头、密钥丢失/包裹文件缺失保留数据库、经量清理保留点滴、内存 Room 与事务回滚。
+- 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（30 tests, 0 failures）/ `lintDebug` ✅（0 error、原有 1 warning）/ `assembleDebug` ✅ / `connectedDebugAndroidTest` ✅（5 tests, 0 failures/0 errors/0 skipped，Pixel_7 API 35）。
+- 验收清单：A1～A5 ✅；B5 领域规则 ✅（日历 UI 尚未实现，完整条目待 M4）；E1～E2 ✅；E8 数据保留逻辑 ✅（恢复 UI 待 M8）；G8 ✅；其他 UI/提醒/锁/备份/发布项待对应里程碑。
+- 决策：D-004、D-005。DB 口令调用方缓冲区及时清零，连接池工作副本在关闭时清零；不以清零破坏连接池后续连接。
+- 提交：本次 `feat(data): 实现加密数据层与经期编辑规则`；待推送结果补记。
+- M0 提交与推送：`3b52626` 已成功推送 `origin/main`。
+- 遗留问题：仪器测试仅覆盖 API 35 模拟器；其他设备与完整功能验收后续完成。
+- 下一步：M2 预测引擎与统计，覆盖 06 §8 全部 25 个场景。
 
 ### M0 · 工程初始化与隐私防线 —— ✅ 完成（2026-10-24）
 - 完成内容：Git/main/远端；Gradle Wrapper（分发 SHA-256）、Version Catalog、单 app、Compose/Material 3/Hilt、类型安全三个导航占位；Manifest 与备份排除加固；三个隐私任务并接入 check；push/PR CI；AGENTS、README、PRIVACY、MIT LICENSE、SECURITY、CHANGELOG、两个 Issue 模板；版本号自动计算；初版矢量自适应图标。
