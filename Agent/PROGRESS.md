@@ -38,8 +38,9 @@
 - 性能：API 35 模拟器、本地 R8 包，8 周期冷启动首帧 366/363/315ms，记录就绪并两帧后 FullyDrawn 为 1664/917/1221ms；260 次经期/7300 条日志的 FullyDrawn 为 2201/1259/2120ms。未把首帧当可交互时间，未满足“中端真机 ≤1.5s”的验证条件。日历索引优化后 8 次切月 374 帧、jank 2.14%、P90/P95 18ms；统计 5 次滚动 159 帧、jank 3.14%、P90/P95 18ms；仅为模拟器有限样本。
 - 补充设备验收（均为虚构数据）：飞行模式下中文日历/统计/每日记录可用、近期经期确认后首页显示点滴；通知权限页实际仅列通知。临近提醒设为随后第 2 个分钟，12:05:00 实际收到中性正文；每日提醒设为 13:02，重启后未打开 App，13:02:12 收到 id=103。临时时区/日期仅用于测试；完成后恢复真实时间、上海时区、100% 字号、竖屏、关闭 TalkBack 与演示模式，App 保持简体中文。
 - 截图：docs/site/screenshots/01～05，1080×2400、简体中文、浅色、虚构示例；图标 512×512。所有使用处注明虚构数据。正式 release-info.json 未生成，官网第 4 节明确待正式签名，不填假大小/哈希/指纹。
-- 脚本：3 个 PowerShell 脚本语法检查通过；update-site 在没有真实 release-info.json 时已实际按预期停止。release 全流程、正式 APK/sha256/Release Notes 的生成仍待人类签名；清洁工作区的缺少签名门槛将在本次提交后实际验证并补记。
-- CI：M9 `3aec2b6` 已 success：https://github.com/xichugeek/Lunatide/actions/runs/40062444267 。本次提交后继续核对远端结果。
+- 脚本：3 个 PowerShell 脚本语法检查通过；update-site 在没有真实 release-info.json 时已实际按预期停止。提交后在干净 main 工作区实际执行 release.ps1，退出码 1、明确提示“缺少 keystore.properties，正式签名密钥必须由人类生成和保管”，没有创建正式元数据。此为拒绝缺少签名的门槛验证通过，不能写成发布全流程通过；正式 APK/sha256/Release Notes 的生成仍待人类签名。
+- 提交与推送：发布准备 `f471888` 已成功推送 origin/main；本条补记签名门槛和最终验收状态。
+- CI：M9 `3aec2b6` 已 success：https://github.com/xichugeek/Lunatide/actions/runs/40062444267 。发布准备 `f471888` 的 https://github.com/xichugeek/Lunatide/actions/runs/40066731154 正在运行，尚不标通过。
 - 仓库自查：无新增运行时依赖；权限白名单与依赖报告已人工检查；无源码隐私豁免；规范仅更新 PROGRESS/DECISIONS；未提交个人路径、密钥、APK、备份或真实记录；无 tag/Release 操作。
 - 决策：D-016。下一步仅在人工配置正式签名后运行 release.ps1、核对真实校验信息并更新官网素材，再单独请求 tag/Release 的明确同意。
 
