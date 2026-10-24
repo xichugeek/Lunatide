@@ -36,6 +36,10 @@ import com.xichugeek.lunatide.core.security.*
 import com.xichugeek.lunatide.core.time.TodayProvider
 import com.xichugeek.lunatide.ui.security.PinScreen
 import com.xichugeek.lunatide.ui.data.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
@@ -59,6 +63,7 @@ class MainActivity : FragmentActivity() {
     private val csvSave = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { appLock.externalReturned(); data.save(it) }
     private val backupOpen = registerForActivityResult(ActivityResultContracts.OpenDocument()) { appLock.externalReturned(); data.selected(it) }
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         enableEdgeToEdge()
@@ -69,13 +74,18 @@ class MainActivity : FragmentActivity() {
                 if (!lock.ready || lock.settings.secureScreen) window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
                 else window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
             }
+            LaunchedEffect(dark) {
+                WindowCompat.getInsetsController(window, window.decorView).apply { isAppearanceLightStatusBars = !dark; isAppearanceLightNavigationBars = !dark }
+            }
             LaunchedEffect(lock.erased) { if (lock.erased) {
                 appLock.acknowledgeErase(); reminders.start()
                 startActivity(Intent(this@MainActivity, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)); finish()
             } }
             LunatideTheme(dark) {
                 if (!lock.ready && lock.error == null) {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+                    Surface(Modifier.fillMaxSize(), color = androidx.compose.ui.graphics.Color(0xFF292842)) {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = androidx.compose.ui.graphics.Color(0xFFE8E5FC)) }
+                    }
                 } else if (lock.locked || lock.mode != PinMode.NONE || !lock.ready) {
                     PinScreen(lock, appLock::digit, appLock::submit, appLock::dismiss,
                         { showBiometric(this@MainActivity, appLock::biometricSuccess, appLock::biometricError) }, appLock::erase)
@@ -105,7 +115,8 @@ class MainActivity : FragmentActivity() {
                         { date, recent, revise -> today.record(date, recent, revise) }, today::undo, today::spotting, today::clearMessage, today::retry,
                         calendarState, calendar::move, calendar::today, editorState, editor.actions, editor::open, statsState, calendar::show,
                         reminderState, reminder.actions.copy(requestPermission = ::requestNotifications, systemSettings = ::openSystemSettings), granted, onboarding::draft,
-                        lock, biometricAuthenticators(this@MainActivity) != null, appLock::begin, appLock::update, dataActions)
+                        lock, biometricAuthenticators(this@MainActivity) != null, appLock::begin, appLock::update, dataActions,
+                        { address -> getSystemService(ClipboardManager::class.java).setPrimaryClip(ClipData.newPlainText(getString(R.string.app_name), address)) })
                     DataDialogs(dataState, data::cancel,
                         { if (dataState.stage == DataStage.EXPORT_PASSWORD) data.encrypt(it) else data.decrypt(it) },
                         data::restore, { data.prepareCsv(csvLabels(this@MainActivity)) }, data::closeResult)

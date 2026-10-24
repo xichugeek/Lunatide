@@ -19,6 +19,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.domain.model.Period
 import com.xichugeek.lunatide.domain.prediction.*
@@ -39,7 +43,9 @@ fun TodayScreen(state: TodayUiState, busy: Boolean, onRecord: () -> Unit, onSett
     val interaction = remember { MutableInteractionSource() }
     val pressed by interaction.collectIsPressedAsState()
     val buttonScale by animateFloatAsState(if (pressed) 0.97f else 1f, tween(180), label = "recordButton")
-    val dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(LocalConfiguration.current.locales[0])
+    val locale = LocalConfiguration.current.locales[0]
+    val dateFormat = DateTimeFormatter.ofPattern(stringResource(R.string.short_date_pattern), locale)
+    val headerFormat = DateTimeFormatter.ofPattern(stringResource(R.string.header_date_pattern), locale)
     val title = when (status.stage) {
         HomeStage.WELCOME -> stringResource(R.string.welcome)
         HomeStage.ONGOING -> stringResource(R.string.period_day, status.days)
@@ -61,34 +67,55 @@ fun TodayScreen(state: TodayUiState, busy: Boolean, onRecord: () -> Unit, onSett
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(state.today.format(dateFormat), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-                TextButton(onClick = onSettings) { Text(stringResource(R.string.settings)) }
+                Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Icon(painterResource(R.drawable.ic_today), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.SemiBold)
+                        Text(state.today.format(headerFormat), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+                IconButton(onClick = onSettings) { Icon(painterResource(R.drawable.ic_settings), stringResource(R.string.settings), tint = MaterialTheme.colorScheme.primary) }
             }
         }
         item {
-            Surface(shape = RoundedCornerShape(20.dp), color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxWidth()) {
+            Surface(shape = RoundedCornerShape(28.dp), color = Color(0xFF292842), contentColor = Color(0xFFF5F2FF), modifier = Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    CycleRing(p?.cycleDay, p?.cycleLength ?: 28, p?.periodLength ?: 5, p?.fertilityHiddenReason == null && p != null, status.stage == HomeStage.LATE, title) {
-                        Text(title, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.primary, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.your_rhythm), style = MaterialTheme.typography.labelLarge, color = Color(0xFFC6C3DE))
+                        Text(stringResource(R.string.local_only_badge), style = MaterialTheme.typography.labelSmall, color = Color(0xFFC6C3DE))
                     }
-                    Text(subtitle, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                    if (state.periods.size == 1 && status.stage != HomeStage.ONGOING) Text(stringResource(R.string.more_records_help), style = MaterialTheme.typography.bodySmall)
+                    CycleRing(p?.cycleDay, p?.cycleLength ?: 28, p?.periodLength ?: 5, p?.fertilityHiddenReason == null && p != null, status.stage == HomeStage.LATE, title, night = true) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            val numeric = status.stage in listOf(HomeStage.ONGOING, HomeStage.WAITING, HomeStage.LATE)
+                            if (numeric) {
+                                Text(stringResource(when (status.stage) { HomeStage.ONGOING -> R.string.period_day_prefix; HomeStage.WAITING -> R.string.next_period_prefix; else -> R.string.late_prefix }), style = MaterialTheme.typography.bodyMedium, color = Color(0xFFD4D0E7), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                                Text(status.days.toString(), style = MaterialTheme.typography.displayMedium.copy(fontSize = 64.sp, fontFeatureSettings = "tnum"), fontWeight = FontWeight.Light)
+                                Text(pluralStringResource(R.plurals.day_unit, status.days), style = MaterialTheme.typography.bodyMedium, color = Color(0xFFD4D0E7))
+                            } else {
+                                Icon(painterResource(R.drawable.ic_today), null, Modifier.size(32.dp), tint = Color(0xFFF4D6DB))
+                                Text(title, style = MaterialTheme.typography.headlineSmall, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                            }
+                        }
+                    }
+                    Text(subtitle, textAlign = androidx.compose.ui.text.style.TextAlign.Center, style = MaterialTheme.typography.bodyMedium, color = Color(0xFFE0DCEC))
+                    Button(onClick = { haptics.performHapticFeedback(HapticFeedbackType.LongPress); onRecord() }, enabled = !busy,
+                        interactionSource = interaction, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE8E5FC), contentColor = Color(0xFF302D55)),
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 54.dp).graphicsLayer { scaleX = buttonScale; scaleY = buttonScale }) {
+                        Text(stringResource(if (status.stage == HomeStage.ONGOING) R.string.period_ended else R.string.period_started), style = MaterialTheme.typography.titleMedium)
+                    }
+                    if (state.periods.size == 1 && status.stage != HomeStage.ONGOING) Text(stringResource(R.string.more_records_help), style = MaterialTheme.typography.bodySmall, color = Color(0xFFC6C3DE))
                 }
             }
         }
         item {
-            Button(onClick = { haptics.performHapticFeedback(HapticFeedbackType.LongPress); onRecord() }, enabled = !busy,
-                interactionSource = interaction,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp).graphicsLayer { scaleX = buttonScale; scaleY = buttonScale }) {
-                Text(stringResource(if (status.stage == HomeStage.ONGOING) R.string.period_ended else R.string.period_started))
-            }
-        }
-        item {
-            Card(onClick = onDayLog, shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth()) {
+            Card(onClick = onDayLog, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(stringResource(R.string.today_log), style = MaterialTheme.typography.titleMedium)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.today_log), style = MaterialTheme.typography.titleMedium)
+                        Text(stringResource(R.string.record_action), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                    }
                     val log = state.logs.firstOrNull { it.day == state.today }
-                    if (log == null || log.isEmpty) Text(stringResource(R.string.record_feeling))
+                    if (log == null || log.isEmpty) Text(stringResource(R.string.record_feeling), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
                     else {
                         val count = log.symptoms.size + listOf(log.flow, log.pain, log.mood, log.bbtCentiCelsius, log.intercourse, log.note).count { it != null }
                         Text(pluralStringResource(R.plurals.record_summary, count, count))
@@ -100,7 +127,7 @@ fun TodayScreen(state: TodayUiState, busy: Boolean, onRecord: () -> Unit, onSett
             }
         }
         item {
-            Card(shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth()) {
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), shape = RoundedCornerShape(24.dp), modifier = Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(stringResource(R.string.coming_up), style = MaterialTheme.typography.titleMedium)
                     p?.nextPeriodStart?.let { Text(pluralStringResource(R.plurals.predicted_start, p.rangeDays, it.format(dateFormat), p.rangeDays)) }

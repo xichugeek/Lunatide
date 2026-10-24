@@ -22,6 +22,8 @@ fun PrivateTextInput(value: String, hint: String, decimal: Boolean = false, enab
     AndroidView(modifier = Modifier.fillMaxWidth().heightIn(min = if (decimal || password) 56.dp else 100.dp), factory = { context ->
         EditText(context).apply {
             isSaveEnabled = false
+            importantForAutofill = android.view.View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+            if (android.os.Build.VERSION.SDK_INT >= 30) importantForContentCapture = android.view.View.IMPORTANT_FOR_CONTENT_CAPTURE_NO_EXCLUDE_DESCENDANTS
             inputType = if (password) InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                 else if (decimal) InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
                 else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS

@@ -65,8 +65,23 @@ val generateChineseResources = tasks.register<GenerateChineseResources>("generat
     sourceFile.set(layout.projectDirectory.file("src/main/res/values/strings.xml"))
     outputDirectory.set(layout.buildDirectory.dir("generated/chineseResources"))
 }
+abstract class GenerateLocalDocuments : DefaultTask() {
+    @get:InputFiles abstract val sourceFiles: ConfigurableFileCollection
+    @get:OutputDirectory abstract val outputDirectory: DirectoryProperty
+    @TaskAction fun generate() {
+        sourceFiles.forEach { source ->
+            val target = outputDirectory.file(source.name).get().asFile
+            target.parentFile.mkdirs(); target.writeBytes(source.readBytes())
+        }
+    }
+}
+val generateLocalDocuments = tasks.register<GenerateLocalDocuments>("generateLocalDocuments") {
+    sourceFiles.from(rootProject.files("PRIVACY.md", "PRIVACY.en.md", "THIRD_PARTY_NOTICES.md"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/localDocuments"))
+}
 androidComponents.onVariants { variant ->
     variant.sources.res?.addGeneratedSourceDirectory(generateChineseResources, GenerateChineseResources::outputDirectory)
+    variant.sources.assets?.addGeneratedSourceDirectory(generateLocalDocuments, GenerateLocalDocuments::outputDirectory)
 }
 
 dependencies {
@@ -86,6 +101,7 @@ dependencies {
     implementation(libs.work)
     implementation(libs.biometric)
     implementation(libs.lifecycle.process)
+    implementation(libs.splash)
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
     debugImplementation(libs.compose.tooling)
@@ -93,6 +109,8 @@ dependencies {
     testImplementation(libs.coroutines.test)
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.ext)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.test)
 }
 ksp { arg("room.schemaLocation", "$projectDir/schemas") }
 
@@ -161,6 +179,9 @@ val verifyDependencies = tasks.register("verifyDependencies") {
         report.parentFile.mkdirs()
         report.writeText(coordinates.joinToString("\n", postfix = "\n"))
         coordinates.forEach { id ->
+            check(rootProject.file("THIRD_PARTY_NOTICES.md").readText().contains(id.toString())) {
+                "隐私检查失败：开源许可清单缺少已解析依赖 $id"
+            }
             check(forbidden.none { id.group.startsWith(it) }) { "隐私检查失败：禁止依赖 $id" }
             val allowed = id.group.startsWith("androidx.") || id.group.startsWith("org.jetbrains.kotlin") ||
                 id.group in setOf("com.google.dagger", "net.zetetic", "com.google.android.material")

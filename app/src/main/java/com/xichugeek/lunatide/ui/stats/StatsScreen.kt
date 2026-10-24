@@ -28,7 +28,7 @@ fun StatsScreen(state: StatsUiState, onHistory: (LocalDate) -> Unit) {
     val locale = LocalConfiguration.current.locales[0]
     val dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(locale)
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        item { Text(stringResource(R.string.statistics), style = MaterialTheme.typography.headlineMedium) }
+        item { Text(stringResource(R.string.statistics), style = MaterialTheme.typography.headlineMedium); Spacer(Modifier.height(6.dp)); Text(stringResource(R.string.statistics_intro), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium) }
         if (state.failed) item { Text(stringResource(R.string.storage_error)) }
         else if (!state.ready) item { CircularProgressIndicator() }
         else if (stats == null || stats.cycles.size < 2) item {
@@ -84,11 +84,11 @@ fun StatsScreen(state: StatsUiState, onHistory: (LocalDate) -> Unit) {
 @Composable private fun StatNumber(label: Int, value: Double?) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(stringResource(label), style = MaterialTheme.typography.labelLarge)
-        Text(value?.let { pluralStringResource(R.plurals.days_value, it.roundToInt(), it.roundToInt()) } ?: stringResource(R.string.not_enough_data), style = MaterialTheme.typography.titleLarge)
+        Text(value?.let { pluralStringResource(R.plurals.days_value, it.roundToInt(), it.roundToInt()) } ?: stringResource(R.string.not_enough_data), style = MaterialTheme.typography.headlineSmall.copy(fontFeatureSettings = "tnum"), color = MaterialTheme.colorScheme.primary)
     }
 }
 @Composable private fun StatsCard(title: Int, content: @Composable ColumnScope.() -> Unit) {
-    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(title), style = MaterialTheme.typography.titleMedium); content()
         }

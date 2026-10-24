@@ -11,6 +11,13 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.*
+import androidx.navigation.toRoute
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.delay
+import androidx.compose.ui.platform.LocalAccessibilityManager
 import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.data.settings.AppSettings
 import com.xichugeek.lunatide.domain.prediction.predict
@@ -38,6 +45,8 @@ import com.xichugeek.lunatide.ui.data.*
 @Serializable data object Reminders
 @Serializable data object Security
 @Serializable data object DataSettings
+@Serializable data object About
+@Serializable data class LocalDocument(val kind: String)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +63,7 @@ fun LunatideRoot(
     lock: LockUiState = LockUiState(), biometricAvailable: Boolean = false,
     onPin: (PinMode) -> Unit = {}, onSettings: ((AppSettings) -> AppSettings) -> Unit = {},
     dataActions: DataActions = DataActions(),
+    onCopy: (String) -> Unit = {},
 ) {
     if (state.failed) {
         RecoveryScreen(dataActions, onRetry); return
@@ -70,8 +80,15 @@ fun LunatideRoot(
     val entry by nav.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     var changeDate by remember { mutableStateOf(false) }
+    val accessibility = LocalAccessibilityManager.current
+    LaunchedEffect(actions.notice) {
+        if (actions.notice != null) {
+            delay(accessibility?.calculateRecommendedTimeoutMillis(8_000, containsText = true, containsControls = true) ?: 8_000)
+            onClear()
+        }
+    }
     Scaffold(bottomBar = {
-        if (route !in listOf(Settings::class.qualifiedName, Reminders::class.qualifiedName, Security::class.qualifiedName, DataSettings::class.qualifiedName)) NavigationBar {
+        if (route in listOf(Today::class.qualifiedName, Calendar::class.qualifiedName, Statistics::class.qualifiedName)) NavigationBar(containerColor = MaterialTheme.colorScheme.background, tonalElevation = 0.dp) {
             val destinations = listOf(Triple(Today, R.string.today, R.drawable.ic_today), Triple(Calendar, R.string.calendar, R.drawable.ic_calendar), Triple(Statistics, R.string.statistics, R.drawable.ic_stats))
             destinations.forEach { (destination, label, icon) ->
                 NavigationBarItem(selected = route == destination::class.qualifiedName,
@@ -97,22 +114,30 @@ fun LunatideRoot(
     }) { padding ->
         Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.TopCenter) {
             NavHost(nav, startDestination = Today, modifier = Modifier.widthIn(max = 600.dp).fillMaxWidth()) {
-                composable<Today> { TodayScreen(state, actions.busy, { onRecord(state.today, false, false) }, { nav.navigate(Settings) }, { onClear(); onOpenDay(state.today) }) }
+                composable<Today> { TodayScreen(state, actions.busy, { onRecord(state.today, false, false) }, { onClear(); nav.navigate(Settings) }, { onClear(); onOpenDay(state.today) }) }
                 composable<Calendar> { CalendarScreen(state, calendar, onMoveMonth, onCalendarToday) { onClear(); onOpenDay(it) } }
                 composable<Statistics> { StatsScreen(stats) { onShowMonth(it); nav.navigate(Calendar) } }
                 composable<Settings> {
-                    Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                        TextButton(onClick = { nav.popBackStack() }) { Text(stringResource(R.string.back)) }
-                        Text(stringResource(R.string.settings), style = MaterialTheme.typography.headlineMedium)
-                        TextButton(onClick = { nav.navigate(Reminders) }) { Text(stringResource(R.string.reminders)) }
-                        TextButton(onClick = { nav.navigate(Security) }) { Text(stringResource(R.string.security_title)) }
-                        TextButton(onClick = { nav.navigate(DataSettings) }) { Text(stringResource(R.string.data_title)) }
-                        Text(stringResource(R.string.promise_local)); Text(stringResource(R.string.data_notice_body)); Text(stringResource(R.string.health_full))
-                    }
+                    SettingsScreen(state.settings, state.prediction, onSettings, { nav.navigate(Reminders) }, { nav.navigate(Security) },
+                        { nav.navigate(DataSettings) }, { nav.navigate(About) }, { nav.popBackStack() })
                 }
                 composable<Reminders> { ReminderSettingsScreen(reminder, notificationsGranted, reminderActions) { nav.popBackStack() } }
                 composable<Security> { SecuritySettingsScreen(lock, biometricAvailable, onPin, onSettings) { nav.popBackStack() } }
                 composable<DataSettings> { DataSettingsScreen(dataActions) { nav.popBackStack() } }
+                composable<About> { AboutScreen({ nav.navigate(LocalDocument(it)) }, onCopy) { nav.popBackStack() } }
+                composable<LocalDocument> { entry ->
+                    val kind = entry.toRoute<LocalDocument>().kind
+                    val context = LocalContext.current
+                    val health = stringResource(R.string.health_full)
+                    val title = stringResource(when (kind) { "privacy" -> R.string.privacy_policy; "licenses" -> R.string.open_source_licenses; else -> R.string.health_declaration })
+                    val locale = LocalConfiguration.current.locales[0]
+                    val text by produceState("", kind, locale) {
+                        value = if (kind == "health") health else withContext(Dispatchers.IO) {
+                            context.assets.open(if (kind == "licenses") "THIRD_PARTY_NOTICES.md" else if (locale.language == "zh") "PRIVACY.md" else "PRIVACY.en.md").bufferedReader().use { it.readText() }
+                        }
+                    }
+                    LocalDocumentScreen(title, text) { nav.popBackStack() }
+                }
             }
         }
     }

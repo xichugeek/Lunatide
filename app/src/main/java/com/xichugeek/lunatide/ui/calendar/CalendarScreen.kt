@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.FontWeight
@@ -50,16 +52,17 @@ fun CalendarScreen(state: TodayUiState, calendar: CalendarUiState, onMove: (Int)
     }, contentPadding = PaddingValues(horizontal = 12.dp, vertical = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = { onMove(-1) }) { Text(stringResource(R.string.previous_month)) }
-                Text(calendar.month.atDay(1).format(DateTimeFormatter.ofPattern("LLLL yyyy", locale)), modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, style = MaterialTheme.typography.titleLarge)
-                TextButton(onClick = { onMove(1) }) { Text(stringResource(R.string.next_month)) }
+                IconButton(onClick = { onMove(-1) }) { Icon(painterResource(R.drawable.ic_chevron), stringResource(R.string.previous_month), Modifier.graphicsLayer { rotationZ = 180f }) }
+                Text(calendar.month.atDay(1).format(DateTimeFormatter.ofPattern(stringResource(R.string.month_date_pattern), locale)), modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, style = MaterialTheme.typography.titleLarge)
+                IconButton(onClick = { onMove(1) }) { Icon(painterResource(R.drawable.ic_chevron), stringResource(R.string.next_month)) }
             }
             if (calendar.month != YearMonth.from(state.today)) TextButton(onClick = onToday) { Text(stringResource(R.string.back_to_today)) }
         }
         item {
-            Row(Modifier.fillMaxWidth()) { (0..6).forEach { offset ->
+            Row(Modifier.fillMaxWidth().padding(vertical = 12.dp)) { (0..6).forEach { offset ->
                 val weekday = calendar.weekStart.plus(offset.toLong())
-                Text(weekday.getDisplayName(TextStyle.SHORT, locale), modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                val fullName = weekday.getDisplayName(TextStyle.FULL, locale)
+                Text(weekday.getDisplayName(TextStyle.NARROW, locale), style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f).clearAndSetSemantics { contentDescription = fullName }, textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } }
             days.chunked(7).forEach { week -> Row(Modifier.fillMaxWidth()) {
                 week.forEach { day -> CalendarCell(day, state, day.month == calendar.month.month, Modifier.weight(1f)) { onDay(day) } }
@@ -80,7 +83,7 @@ fun CalendarScreen(state: TodayUiState, calendar: CalendarUiState, onMove: (Int)
             val first = calendar.month.atDay(1)
             val last = calendar.month.atEndOfMonth()
             val periods = state.periods.filter { it.start <= last && it.effectiveEnd(state.today) >= first }
-            Card(Modifier.fillMaxWidth()) {
+            Card(Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (periods.isEmpty()) Text(stringResource(R.string.month_no_period))
                     else periods.forEach {
@@ -137,7 +140,7 @@ private fun CalendarCell(day: LocalDate, state: TodayUiState, inMonth: Boolean, 
                     drawPath(drop, if (dark) Color(0xFFD9A3AD) else Color(0xFFC98A96))
                 }
             }
-            Text(day.dayOfMonth.toString(), color = foreground.copy(alpha = if (inMonth || actual != null) 1f else 0.75f), fontWeight = if (day == state.today) FontWeight.Bold else FontWeight.Normal, modifier = Modifier.clearAndSetSemantics { })
+            Text(day.dayOfMonth.toString(), style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"), softWrap = false, color = foreground.copy(alpha = if (inMonth || actual != null) 1f else 0.75f), fontWeight = if (day == state.today) FontWeight.Bold else FontWeight.Normal, modifier = Modifier.clearAndSetSemantics { })
         }
     }
 }

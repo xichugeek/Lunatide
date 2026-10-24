@@ -25,8 +25,8 @@ import kotlinx.serialization.json.Json
     val notificationPrivateMode: Boolean = true,
 ) {
     fun applyTo(old: AppSettings): AppSettings = old.copy(onboardingCompleted = true,
-        initialCycleLength = initialCycleLength?.coerceIn(15, 90), initialPeriodLength = initialPeriodLength?.coerceIn(1, 15),
-        manualCycleLength = manualCycleLength?.coerceIn(15, 90), manualPeriodLength = manualPeriodLength?.coerceIn(1, 15),
+        initialCycleLength = initialCycleLength?.coerceIn(15, 90), initialPeriodLength = initialPeriodLength?.coerceIn(1, 14),
+        manualCycleLength = manualCycleLength?.coerceIn(15, 90), manualPeriodLength = manualPeriodLength?.coerceIn(1, 14),
         showFertility = showFertility, showBbt = showBbt, showIntercourse = showIntercourse,
         weekStart = weekStart.takeIf { it in listOf("MONDAY", "SUNDAY") } ?: old.weekStart,
         theme = theme.takeIf { it in listOf("SYSTEM", "LIGHT", "DARK") } ?: old.theme,

@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" tools:node="remove" />
     <application android:name=".LunatideApp" android:allowBackup="false" android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules" android:usesCleartextTraffic="false"
-        android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:theme="@style/Theme.Lunatide" android:supportsRtl="true">
+        android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:theme="@style/Theme.Lunatide" android:supportsRtl="true" android:localeConfig="@xml/locales_config">
         <activity android:name="androidx.compose.ui.tooling.PreviewActivity" tools:node="remove" />
         <receiver android:name="androidx.profileinstaller.ProfileInstallReceiver" tools:node="remove" tools:ignore="MissingClass" />
         <receiver android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver" tools:node="remove" />
@@ -17,7 +17,7 @@
             <meta-data android:name="androidx.work.WorkManagerInitializer" tools:node="remove" />
             <meta-data android:name="androidx.emoji2.text.EmojiCompatInitializer" tools:node="remove" />
         </provider>
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity android:name=".MainActivity" android:exported="true" android:theme="@style/Theme.Lunatide.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

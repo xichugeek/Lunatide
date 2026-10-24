@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.ui.security.EraseConfirmation
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
+import com.xichugeek.lunatide.ui.components.PageHeader
 
 data class DataActions(val export: () -> Unit = {}, val import: (Boolean) -> Unit = {}, val csv: () -> Unit = {}, val erase: () -> Unit = {})
 
@@ -18,7 +19,7 @@ data class DataActions(val export: () -> Unit = {}, val import: (Boolean) -> Uni
 fun DataSettingsScreen(actions: DataActions, onBack: () -> Unit) {
     var erase by remember { mutableStateOf(false) }
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        item { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) }; Text(stringResource(R.string.data_title), style = MaterialTheme.typography.headlineMedium) }
+        item { PageHeader(stringResource(R.string.data_title), onBack) }
         item { Text(stringResource(R.string.data_notice_body)); Text(stringResource(R.string.backup_local_body)) }
         item { OutlinedButton(onClick = actions.export, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(stringResource(R.string.backup_export)) } }
         item { OutlinedButton(onClick = { actions.import(false) }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) { Text(stringResource(R.string.backup_import)) } }

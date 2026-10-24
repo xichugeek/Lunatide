@@ -2,6 +2,12 @@
     <style name="Theme.Lunatide" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowBackground">#FBF8F6</item>
+        <item name="android:windowBackground">#292842</item>
+    </style>
+    <style name="Theme.Lunatide.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#292842</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_moon_wave</item>
+        <item name="postSplashScreenTheme">@style/Theme.Lunatide</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

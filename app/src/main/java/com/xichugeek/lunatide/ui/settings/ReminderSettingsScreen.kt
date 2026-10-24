@@ -14,6 +14,7 @@ import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.domain.reminder.ReminderKind
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import java.time.LocalTime
+import com.xichugeek.lunatide.ui.components.PageHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,7 +23,7 @@ fun ReminderSettingsScreen(state: ReminderUiState, granted: Boolean, actions: Re
     var help by remember { mutableStateOf(false) }
     val settings = state.settings
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        item { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) }; Text(stringResource(R.string.reminders), style = MaterialTheme.typography.headlineMedium) }
+        item { PageHeader(stringResource(R.string.reminders), onBack) }
         if (!state.ready) item { CircularProgressIndicator() }
         if (!granted) item {
             Card(Modifier.fillMaxWidth()) { Column(Modifier.padding(16.dp)) {

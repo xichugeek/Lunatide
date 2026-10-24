@@ -11,6 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.*
 import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.ui.components.PastDatePicker
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
@@ -32,9 +34,11 @@ fun OnboardingScreen(today: LocalDate, state: OnboardingState, onDraft: (Onboard
                     Text(stringResource(R.string.onboarding_step, page + 1), style = MaterialTheme.typography.labelLarge)
                     TextButton(enabled = !state.busy, onClick = { onFinish(null, null, null) }) { Text(stringResource(R.string.skip)) }
                 }
+                LinearProgressIndicator(progress = { (page + 1) / 5f }, modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(16.dp))
                 when (page) {
                     0 -> {
+                        Icon(painterResource(R.drawable.ic_moon_wave), null, Modifier.size(104.dp), tint = MaterialTheme.colorScheme.primary)
                         Text(stringResource(R.string.app_name), style = MaterialTheme.typography.displayMedium, color = MaterialTheme.colorScheme.primary)
                         Text(stringResource(R.string.tagline), style = MaterialTheme.typography.headlineSmall)
                         listOf(R.string.promise_account, R.string.promise_local, R.string.promise_quiet).forEach { Text(stringResource(it), style = MaterialTheme.typography.bodyLarge) }
@@ -55,7 +59,8 @@ fun OnboardingScreen(today: LocalDate, state: OnboardingState, onDraft: (Onboard
                         if (pinSet) Text(stringResource(R.string.pin_enabled)) else OutlinedButton(onClick = onPin) { Text(stringResource(R.string.pin_enable)) }
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(stringResource(R.string.reminder_upcoming), Modifier.weight(1f))
-                            Switch(remindersEnabled, onReminderToggle)
+                            val label = stringResource(R.string.reminder_upcoming)
+                            Switch(remindersEnabled, onReminderToggle, modifier = Modifier.semantics { contentDescription = label })
                         }
                     }
                     4 -> {
@@ -79,7 +84,7 @@ fun OnboardingScreen(today: LocalDate, state: OnboardingState, onDraft: (Onboard
 private fun LengthSelector(title: Int, value: Int, range: IntRange, known: Boolean, onChange: (Int) -> Unit, onUnknown: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(stringResource(title), style = MaterialTheme.typography.titleMedium)
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = { onChange(value - 1) }, enabled = value > range.first) { Text(stringResource(R.string.decrease)) }
             Text(pluralStringResource(R.plurals.days_value, value, value))
             OutlinedButton(onClick = { onChange(value + 1) }, enabled = value < range.last) { Text(stringResource(R.string.increase)) }

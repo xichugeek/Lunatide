@@ -16,6 +16,7 @@ fun PastDatePicker(today: LocalDate, initial: LocalDate, minimum: LocalDate? = n
     val locale = LocalConfiguration.current.locales[0]
     val state = remember(today, initial, minimum, locale) { DatePickerState(
         locale = locale,
+        yearRange = minOf(1900, initial.year, today.year)..maxOf(2100, initial.year, today.year),
         initialSelectedDateMillis = initial.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {

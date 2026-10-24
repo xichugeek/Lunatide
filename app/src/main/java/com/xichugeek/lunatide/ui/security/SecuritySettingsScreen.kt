@@ -13,13 +13,14 @@ import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.core.security.*
 import com.xichugeek.lunatide.data.settings.AppSettings
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
+import com.xichugeek.lunatide.ui.components.PageHeader
 
 @Composable
 fun SecuritySettingsScreen(state: LockUiState, biometricAvailable: Boolean, onPin: (PinMode) -> Unit,
     onUpdate: ((AppSettings) -> AppSettings) -> Unit, onBack: () -> Unit) {
     val s = state.settings
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        item { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) }; Text(stringResource(R.string.security_title), style = MaterialTheme.typography.headlineMedium) }
+        item { PageHeader(stringResource(R.string.security_title), onBack) }
         item { TextButton(onClick = { onPin(if (state.pinSet) PinMode.CHANGE else PinMode.SET) }) { Text(stringResource(if (state.pinSet) R.string.pin_change else R.string.pin_enable)) }
             if (state.pinSet) TextButton(onClick = { onPin(PinMode.DISABLE) }) { Text(stringResource(R.string.pin_disable)) }
             Text(stringResource(R.string.pin_explanation), style = MaterialTheme.typography.bodySmall) }
