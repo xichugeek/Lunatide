@@ -15,6 +15,7 @@ import com.xichugeek.lunatide.domain.reminder.ReminderKind
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import java.time.LocalTime
 import com.xichugeek.lunatide.ui.components.PageHeader
+import com.xichugeek.lunatide.ui.components.LabeledSwitch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,10 +55,7 @@ fun ReminderSettingsScreen(state: ReminderUiState, granted: Boolean, actions: Re
     }
 }
 @Composable private fun ReminderToggle(labelId: Int, checked: Boolean, onChange: (Boolean) -> Unit) {
-    val label = stringResource(labelId)
-    Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-        Text(label, Modifier.weight(1f)); Switch(checked, onChange, modifier = Modifier.semantics { contentDescription = label })
-    }
+    LabeledSwitch(stringResource(labelId), checked, onChange = onChange)
 }
 @Preview(locale = "zh") @Composable private fun LightPreview() { LunatideTheme(false) { ReminderSettingsScreen(ReminderUiState(ready = true), true, ReminderActions(), {}) } }
 @Preview(locale = "zh", uiMode = 32) @Composable private fun DarkPreview() { LunatideTheme(true) { ReminderSettingsScreen(ReminderUiState(ready = true), true, ReminderActions(), {}) } }

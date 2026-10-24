@@ -28,6 +28,7 @@ import com.xichugeek.lunatide.reminder.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
@@ -104,6 +105,9 @@ class MainActivity : FragmentActivity() {
                         startActivity(Intent(this@MainActivity, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)); finish()
                     } }
                     val state by today.state.collectAsState()
+                    LaunchedEffect(state.ready, state.failed) { if (state.ready || state.failed) {
+                        withFrameNanos { }; withFrameNanos { }; reportFullyDrawn()
+                    } }
                     val actions by today.actions.collectAsState()
                     val onboardingState by onboarding.state.collectAsState()
                     val calendarState by calendar.state.collectAsState()

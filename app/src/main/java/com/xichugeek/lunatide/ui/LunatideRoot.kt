@@ -12,12 +12,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.*
 import androidx.navigation.toRoute
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.delay
 import androidx.compose.ui.platform.LocalAccessibilityManager
+import com.xichugeek.lunatide.ui.development.DeveloperEntry
 import com.xichugeek.lunatide.R
 import com.xichugeek.lunatide.data.settings.AppSettings
 import com.xichugeek.lunatide.domain.prediction.predict
@@ -78,7 +80,8 @@ fun LunatideRoot(
     }
     val nav = rememberNavController()
     val entry by nav.currentBackStackEntryAsState()
-    val route = entry?.destination?.route
+    val currentDestination = entry?.destination
+    val showTabs = currentDestination?.let { it.hasRoute<Today>() || it.hasRoute<Calendar>() || it.hasRoute<Statistics>() } == true
     var changeDate by remember { mutableStateOf(false) }
     val accessibility = LocalAccessibilityManager.current
     LaunchedEffect(actions.notice) {
@@ -88,10 +91,10 @@ fun LunatideRoot(
         }
     }
     Scaffold(bottomBar = {
-        if (route in listOf(Today::class.qualifiedName, Calendar::class.qualifiedName, Statistics::class.qualifiedName)) NavigationBar(containerColor = MaterialTheme.colorScheme.background, tonalElevation = 0.dp) {
+        if (showTabs) NavigationBar(containerColor = MaterialTheme.colorScheme.background, tonalElevation = 0.dp) {
             val destinations = listOf(Triple(Today, R.string.today, R.drawable.ic_today), Triple(Calendar, R.string.calendar, R.drawable.ic_calendar), Triple(Statistics, R.string.statistics, R.drawable.ic_stats))
             destinations.forEach { (destination, label, icon) ->
-                NavigationBarItem(selected = route == destination::class.qualifiedName,
+                NavigationBarItem(selected = currentDestination?.hasRoute(destination::class) == true,
                     onClick = { nav.navigate(destination) { popUpTo(nav.graph.startDestinationId) { saveState = true }; launchSingleTop = true; restoreState = true } },
                     icon = { Icon(painterResource(icon), null) }, label = { Text(stringResource(label)) })
             }
@@ -119,7 +122,7 @@ fun LunatideRoot(
                 composable<Statistics> { StatsScreen(stats) { onShowMonth(it); nav.navigate(Calendar) } }
                 composable<Settings> {
                     SettingsScreen(state.settings, state.prediction, onSettings, { nav.navigate(Reminders) }, { nav.navigate(Security) },
-                        { nav.navigate(DataSettings) }, { nav.navigate(About) }, { nav.popBackStack() })
+                        { nav.navigate(DataSettings) }, { nav.navigate(About) }, { nav.popBackStack() }, { DeveloperEntry() })
                 }
                 composable<Reminders> { ReminderSettingsScreen(reminder, notificationsGranted, reminderActions) { nav.popBackStack() } }
                 composable<Security> { SecuritySettingsScreen(lock, biometricAvailable, onPin, onSettings) { nav.popBackStack() } }

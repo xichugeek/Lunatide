@@ -44,11 +44,7 @@ fun DayLogSheet(state: DayEditorState, settings: AppSettings, prediction: Predic
             } else {
                 val enabled = !state.busy
                 if (state.log.isEmpty) Text(stringResource(R.string.no_record), style = MaterialTheme.typography.bodySmall)
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-                    val periodLabel = stringResource(R.string.this_day_period)
-                    Text(periodLabel, modifier = Modifier.weight(1f))
-                    Switch(state.inPeriod, actions.period, enabled = enabled, modifier = Modifier.semantics { contentDescription = periodLabel })
-                }
+                LabeledSwitch(stringResource(R.string.this_day_period), state.inPeriod, enabled, actions.period)
                 FieldLabel(R.string.flow)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Flow.entries.forEach { value -> FilterChip(state.log.flow == value, { actions.flow(value.takeUnless { it == state.log.flow }) }, label = { Text(stringResource(flowLabel(value))) }, enabled = enabled, modifier = Modifier.heightIn(min = 48.dp)) }

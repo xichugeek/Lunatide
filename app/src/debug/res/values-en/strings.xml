@@ -1,0 +1,7 @@
+<resources>
+    <string name="developer_seed">Developer: fill fictional sample data</string>
+    <string name="developer_seed_warning">For development and screenshots only. Replaces local records with 8 fictional cycles. Export a backup first. No intercourse records are added.</string>
+    <string name="developer_seed_done">Fictional sample data added</string>
+    <string name="developer_performance">Developer: fill 20 years of performance data</string>
+    <string name="developer_performance_warning">Replaces local data with 260 fictional periods and 7300 days for performance testing. Export a backup first.</string>
+</resources>

@@ -121,3 +121,13 @@
 - 隐私政策与开源许可作为根目录单一来源，由构建复制到只读 assets，应用不维护另一份可能漂移的中文文本；英文政策另列 PRIVACY.en.md。许可列出所有解析后的运行时坐标及版本，verifyDependencies 增加遗漏即失败；完整保留 SQLCipher Android 4.19.1 官方 BSD 许可全文和 MIT/Apache 2.0 文本。
 - 文本输入另外禁用自动填充与支持系统的内容捕获；API 边界通过 Lint 检查，不扩大权限。手动经期长度 1–14 天，与预测引擎范围保持一致。
 - Lint 保留 localeConfig 的 UnusedAttribute 提示：该配置只供 Android 13+ 的系统应用语言选择使用，旧系统忽略该属性，符合兼容设计；不使用全局忽略。另一条图标目录提示仍按 D-003 保留。
+## D-016 · Release 实测、示例隔离与发布门槛（2026-10-24）
+- 首版版本 1.0.0，versionCode 自动为 10000。未提供正式签名时，只允许本地 debug 证书验证 R8 包，发布脚本必须拒绝缺失配置或 Android Debug 证书，绝不把本地测试指纹当正式指纹。
+- 本机 Build Tools 37 的 apksigner 将证书前缀输出为 V2 Signer，发布脚本兼容该格式及旧 Signer #1 格式，只公开 SHA-256，不输出证书主体个人信息或密码。
+- full lintRelease 发现 release 不含 PreviewActivity 时，公共 Manifest 中的移除标记触发 MissingClass；将该移除标记移到 debug Manifest，仍由最终 Manifest 导出检查保证不能注册 PreviewActivity，不使用全局忽略。
+- R8 实机验证发现，路由字符串与运行时 KClass.qualifiedName 比较会受混淆影响而隐藏底部导航；改为官方 NavDestination.hasRoute 类型检查，并再次实际验证 release 三个 Tab。
+- 示例生成、虚构记录与入口文案仅在 src/debug；src/release 的 DeveloperEntry 为空插槽，release 的 DEX/resources 再次扫描不得包含样例入口。另提供 debug 专用的 260 次经期/7300 天记录性能数据，正式截图始终使用约 8 个周期且无同房记录。
+- 日历把日志列表按日期索引并在数据变化时缓存，避免每个日期格都遍历 20 年日志。正式冷启动计时在记录就绪并完成两帧后 reportFullyDrawn，不把 Activity 首帧时间当成完整可交互时间；模拟器结果与实体机目标分开记录。
+- 设置、提醒、安全和每日记录的开关统一使用整行 48dp 以上触点；文字与开关合并为一个带状态的无障碍节点，避免只能点右侧小开关及重复朗读。无 PIN 时的生物识别仍保持整行禁用。
+- 截图为 API 35 模拟器、1080×2400、简体中文、浅色、虚构数据；临时把模拟器时钟设为 2026-10-12，以在同一月网格显示实际经期、未来易孕期与预测经期。完成验证后恢复真实时钟、100% 字号和中文，图像不修饰或伪造。
+- 官网文案有完整 12 节草稿和模板；正式签名的 release-info.json 只能由真实 APK 生成。签名未配置时不创建伪造元数据，不填假哈希；update-site.ps1 在缺少真实信息时停止。签名与标签/Release 分两步交给人类确认。

@@ -19,7 +19,7 @@ android {
         applicationId = "com.xichugeek.lunatide"
         minSdk = 26
         targetSdk = 37
-        versionName = "0.1.0"
+        versionName = "1.0.0"
         val parts = requireNotNull(versionName).split('.').map(String::toInt)
         versionCode = parts[0] * 10000 + parts[1] * 100 + parts[2]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -221,4 +221,17 @@ val verifyPrivacy = tasks.register("verifyPrivacy") {
     group = "verification"
     dependsOn(verifyManifestPermissions, verifyDependencies, verifySourceForbiddenApis)
 }
+val verifySampleIsolation = tasks.register("verifySampleIsolation") {
+    group = "verification"
+    doLast {
+        fileTree("src/main") { include("**/*.kt", "**/*.xml") }.plus(fileTree("src/release") { include("**/*.kt", "**/*.xml") }).forEach { source ->
+            check(listOf("developer_seed", "developer_performance", "DemoViewModel", "填充虚构示例数据", "Fictional sample data added").none { it in source.readText() }) {
+                "隐私检查失败：正式源集中出现示例数据入口 ${source.name}"
+            }
+        }
+        val releaseEntry = file("src/release/java/com/xichugeek/lunatide/ui/development/DeveloperEntry.kt").readText()
+        check("fun DeveloperEntry() = Unit" in releaseEntry) { "隐私检查失败：release 开发者插槽必须为空" }
+    }
+}
+verifyPrivacy.configure { dependsOn(verifySampleIsolation) }
 tasks.named("check") { dependsOn(verifyPrivacy) }

@@ -14,6 +14,7 @@ import com.xichugeek.lunatide.core.security.*
 import com.xichugeek.lunatide.data.settings.AppSettings
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import com.xichugeek.lunatide.ui.components.PageHeader
+import com.xichugeek.lunatide.ui.components.LabeledSwitch
 
 @Composable
 fun SecuritySettingsScreen(state: LockUiState, biometricAvailable: Boolean, onPin: (PinMode) -> Unit,
@@ -37,10 +38,7 @@ fun SecuritySettingsScreen(state: LockUiState, biometricAvailable: Boolean, onPi
     }
 }
 @Composable private fun SecurityToggle(labelId: Int, checked: Boolean, enabled: Boolean = true, onChange: (Boolean) -> Unit) {
-    val label = stringResource(labelId)
-    Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-        Text(label, Modifier.weight(1f)); Switch(checked, onChange, enabled = enabled, modifier = Modifier.semantics { contentDescription = label })
-    }
+    LabeledSwitch(stringResource(labelId), checked, enabled, onChange)
 }
 @Preview(locale = "zh") @Composable private fun LightPreview() { LunatideTheme(false) { SecuritySettingsScreen(LockUiState(ready = true), false, {}, {}, {}) } }
 @Preview(locale = "zh", uiMode = 32) @Composable private fun DarkPreview() { LunatideTheme(true) { SecuritySettingsScreen(LockUiState(ready = true, pinSet = true), true, {}, {}, {}) } }

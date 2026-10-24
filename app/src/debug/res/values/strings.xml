@@ -1,0 +1,7 @@
+<resources>
+    <string name="developer_seed">开发者：填充虚构示例数据</string>
+    <string name="developer_seed_warning">仅用于开发与截图。将用 8 个虚构周期替换本机现有记录，请先备份。不会添加同房记录。</string>
+    <string name="developer_seed_done">已填充虚构示例数据</string>
+    <string name="developer_performance">开发者：填充 20 年性能测试数据</string>
+    <string name="developer_performance_warning">将用 260 次经期、7300 天虚构记录替换现有数据，仅供性能测试，请先备份。</string>
+</resources>

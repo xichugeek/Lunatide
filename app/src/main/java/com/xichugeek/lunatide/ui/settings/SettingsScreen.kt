@@ -17,10 +17,13 @@ import com.xichugeek.lunatide.data.settings.AppSettings
 import com.xichugeek.lunatide.domain.prediction.PredictionResult
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import com.xichugeek.lunatide.ui.components.PageHeader
+import com.xichugeek.lunatide.ui.components.LabeledSwitch
 
 @Composable
 fun SettingsScreen(s: AppSettings, prediction: PredictionResult?, onUpdate: ((AppSettings) -> AppSettings) -> Unit,
-    onReminders: () -> Unit, onSecurity: () -> Unit, onData: () -> Unit, onAbout: () -> Unit, onBack: () -> Unit) {
+    onReminders: () -> Unit, onSecurity: () -> Unit, onData: () -> Unit, onAbout: () -> Unit, onBack: () -> Unit,
+    developerContent: @Composable () -> Unit = {},
+) {
     var length by remember { mutableIntStateOf(0) }
     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item { PageHeader(stringResource(R.string.settings), onBack) }
@@ -51,6 +54,7 @@ fun SettingsScreen(s: AppSettings, prediction: PredictionResult?, onUpdate: ((Ap
             } }
         }
         item { SettingLink(R.string.about, onClick = onAbout) }
+        item { developerContent() }
     }
     if (length != 0) {
         val cycle = length == 1
@@ -81,10 +85,7 @@ fun SettingsScreen(s: AppSettings, prediction: PredictionResult?, onUpdate: ((Ap
     }
 }
 @Composable private fun SettingSwitch(id: Int, checked: Boolean, change: (Boolean) -> Unit) {
-    val label = stringResource(id)
-    Row(Modifier.fillMaxWidth().heightIn(min = 48.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-        Text(label, Modifier.weight(1f)); Switch(checked, change, modifier = Modifier.semantics { contentDescription = label })
-    }
+    LabeledSwitch(stringResource(id), checked, onChange = change)
 }
 @Preview(locale = "zh") @Composable private fun LightPreview() { LunatideTheme(false) { SettingsScreen(AppSettings(), null, {}, {}, {}, {}, {}, {}) } }
 @Preview(locale = "zh", uiMode = 32) @Composable private fun DarkPreview() { LunatideTheme(true) { SettingsScreen(AppSettings(), null, {}, {}, {}, {}, {}, {}) } }

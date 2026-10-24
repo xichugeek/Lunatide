@@ -44,6 +44,7 @@ import java.time.format.TextStyle
 fun CalendarScreen(state: TodayUiState, calendar: CalendarUiState, onMove: (Int) -> Unit, onToday: () -> Unit, onDay: (LocalDate) -> Unit) {
     val locale = LocalConfiguration.current.locales[0]
     val days = remember(calendar.month, calendar.weekStart) { calendarDays(calendar.month, calendar.weekStart) }
+    val logsByDay = remember(state.logs) { state.logs.associateBy { it.day } }
     var drag by remember { mutableFloatStateOf(0f) }
     var legend by remember { mutableStateOf(false) }
     val dateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(locale)
@@ -65,7 +66,7 @@ fun CalendarScreen(state: TodayUiState, calendar: CalendarUiState, onMove: (Int)
                 Text(weekday.getDisplayName(TextStyle.NARROW, locale), style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f).clearAndSetSemantics { contentDescription = fullName }, textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } }
             days.chunked(7).forEach { week -> Row(Modifier.fillMaxWidth()) {
-                week.forEach { day -> CalendarCell(day, state, day.month == calendar.month.month, Modifier.weight(1f)) { onDay(day) } }
+                week.forEach { day -> CalendarCell(day, state, day.month == calendar.month.month, logsByDay[day], Modifier.weight(1f)) { onDay(day) } }
             } }
         }
         item {
@@ -99,12 +100,11 @@ fun CalendarScreen(state: TodayUiState, calendar: CalendarUiState, onMove: (Int)
 }
 
 @Composable
-private fun CalendarCell(day: LocalDate, state: TodayUiState, inMonth: Boolean, modifier: Modifier, onClick: () -> Unit) {
+private fun CalendarCell(day: LocalDate, state: TodayUiState, inMonth: Boolean, log: DayLog?, modifier: Modifier, onClick: () -> Unit) {
     val actual = state.periods.firstOrNull { it.contains(day, state.today) }
     val forecast = day >= state.today && state.prediction?.predictedPeriods?.any { day in it } == true && actual == null
     val fertile = day >= state.today && state.prediction?.fertileWindows?.any { day in it } == true && actual == null && !forecast
     val ovulation = day >= state.today && state.prediction?.ovulationDays?.contains(day) == true
-    val log = state.logs.firstOrNull { it.day == day }
     val spotting = log?.flow == Flow.SPOTTING
     val dark = MaterialTheme.colorScheme.background.luminance() < 0.2f
     val period = if (dark) Color(0xFFF08C9E) else Color(0xFFB53E57)
