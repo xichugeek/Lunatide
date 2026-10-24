@@ -90,4 +90,18 @@
     <string name="include_for_flow">Mark this day as part of a period?</string><string name="include_for_flow_body">This flow level needs a period record. Cancel to keep your current record.</string>
     <string name="shorten_period">This period ended the day before</string><string name="shorten_period_body">This day and later days will be removed from this period. Their non-spotting flow will be cleared, and other records kept.</string>
     <string name="saving">Saving</string>
+    <string name="empty_statistics">A little more history</string><string name="empty_statistics_body">Record one more period to see your cycle statistics</string>
+    <string name="overview">Overview</string><string name="average_cycle">Average cycle</string><string name="average_period">Average period</string><string name="regularity">Regularity</string>
+    <string name="regular">Regular</string><string name="somewhat_regular">Fairly regular</string><string name="irregular">Less regular</string><string name="not_enough_data">Not enough data</string>
+    <string name="cycle_chart">Cycle length · Last 12 cycles</string><string name="period_chart">Period length · Last 12 periods</string>
+    <string name="cycle_chart_note">The dashed line is the mean of valid records. The shaded band shows the common 21–35 day range.</string><string name="period_chart_note">The dashed line is the mean of recent valid periods.</string>
+    <string name="chart_bar_description">Started %1$s, %2$s</string><string name="no_complete_records">No completed records yet</string>
+    <string name="common_symptoms">Common symptoms · Last 6 cycles</string><string name="no_symptoms">No symptoms recorded yet</string><string name="pain_distribution">Period pain distribution</string>
+    <plurals name="occurrences"><item quantity="one">%1$d occurrence</item><item quantity="other">%1$d occurrences</item></plurals>
+    <string name="cycle_history">Cycle history</string><string name="started_on">Started %1$s</string><string name="cycle_in_progress">In progress · Day %1$d</string>
+    <string name="history_cycle">Cycle: %1$s</string><string name="history_period">Period: %1$s</string><string name="period_in_progress">Period in progress</string>
+    <string name="tip_cycle_range">Your average cycle is outside the common 21–35 day range. Everyone is different. If you have concerns, consider talking to a doctor.</string>
+    <string name="tip_long_periods">Your recent periods have lasted longer. If this comes with heavy flow or significant discomfort, consider talking to a doctor.</string>
+    <string name="tip_irregular">Your recent cycle lengths vary more. Stress, sleep, and weight changes can all play a part. If this continues, consider talking to a doctor.</string>
+    <string name="tip_pain">Your recent period pain has been significant. If it affects your daily life, consider talking to a doctor.</string>
 </resources>

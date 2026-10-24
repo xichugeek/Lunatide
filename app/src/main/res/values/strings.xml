@@ -90,4 +90,18 @@
     <string name="include_for_flow">要把这天标为经期吗？</string><string name="include_for_flow_body">这种经量需要属于经期。取消后不会改变原记录。</string>
     <string name="shorten_period">这次经期在前一天就结束了</string><string name="shorten_period_body">这天及其后的日期将不再属于这次经期；这些日期的非点滴经量会清空，其他记录保留。</string>
     <string name="saving">正在保存</string>
+    <string name="empty_statistics">还需要一点记录</string><string name="empty_statistics_body">再记录一次经期，就能看到你的周期统计啦</string>
+    <string name="overview">概览</string><string name="average_cycle">平均周期</string><string name="average_period">平均经期</string><string name="regularity">规律性</string>
+    <string name="regular">规律</string><string name="somewhat_regular">较规律</string><string name="irregular">不太规律</string><string name="not_enough_data">数据不足</string>
+    <string name="cycle_chart">周期长度 · 最近 12 个周期</string><string name="period_chart">经期长度 · 最近 12 次经期</string>
+    <string name="cycle_chart_note">虚线为有效记录的平均值，浅色背景带表示常见的 21–35 天范围。</string><string name="period_chart_note">虚线为最近有效经期的平均值。</string>
+    <string name="chart_bar_description">%1$s 开始，%2$s</string><string name="no_complete_records">暂无完整记录</string>
+    <string name="common_symptoms">常见症状 · 最近 6 个周期</string><string name="no_symptoms">还没有症状记录</string><string name="pain_distribution">痛经程度分布</string>
+    <plurals name="occurrences"><item quantity="other">%1$d 次</item></plurals>
+    <string name="cycle_history">周期历史</string><string name="started_on">%1$s 开始</string><string name="cycle_in_progress">进行中 · 第 %1$d 天</string>
+    <string name="history_cycle">周期 %1$s</string><string name="history_period">经期 %1$s</string><string name="period_in_progress">经期进行中</string>
+    <string name="tip_cycle_range">你的平均周期不在常见的 21–35 天范围内。每个人的情况不同，如果你有疑虑，可以咨询医生。</string>
+    <string name="tip_long_periods">最近几次经期持续时间偏长，如果同时伴随经量很多或明显不适，可以咨询医生。</string>
+    <string name="tip_irregular">最近几个周期长度变化较大。压力、作息、体重变化都可能有影响，如果持续这样，可以咨询医生。</string>
+    <string name="tip_pain">最近几次痛经比较明显，如果影响到日常生活，可以咨询医生。</string>
 </resources>

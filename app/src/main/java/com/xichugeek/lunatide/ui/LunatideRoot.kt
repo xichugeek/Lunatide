@@ -22,6 +22,7 @@ import com.xichugeek.lunatide.ui.today.*
 import com.xichugeek.lunatide.ui.calendar.CalendarScreen
 import com.xichugeek.lunatide.ui.calendar.CalendarUiState
 import com.xichugeek.lunatide.ui.daylog.*
+import com.xichugeek.lunatide.ui.stats.*
 import java.time.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -39,6 +40,7 @@ fun LunatideRoot(
     calendar: CalendarUiState = CalendarUiState(java.time.YearMonth.from(state.today)),
     onMoveMonth: (Int) -> Unit = {}, onCalendarToday: () -> Unit = {},
     editor: DayEditorState? = null, editorActions: DayEditorActions = DayEditorActions(), onOpenDay: (LocalDate) -> Unit = {},
+    stats: StatsUiState = StatsUiState(), onShowMonth: (LocalDate) -> Unit = {},
 ) {
     if (state.failed) {
         Surface(Modifier.fillMaxSize()) {
@@ -82,7 +84,7 @@ fun LunatideRoot(
             NavHost(nav, startDestination = Today, modifier = Modifier.widthIn(max = 600.dp).fillMaxWidth()) {
                 composable<Today> { TodayScreen(state, actions.busy, { onRecord(state.today, false, false) }, { nav.navigate(Settings) }, { onClear(); onOpenDay(state.today) }) }
                 composable<Calendar> { CalendarScreen(state, calendar, onMoveMonth, onCalendarToday) { onClear(); onOpenDay(it) } }
-                composable<Statistics> { Placeholder(R.string.statistics) }
+                composable<Statistics> { StatsScreen(stats) { onShowMonth(it); nav.navigate(Calendar) } }
                 composable<Settings> {
                     Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         TextButton(onClick = { nav.popBackStack() }) { Text(stringResource(R.string.back)) }
