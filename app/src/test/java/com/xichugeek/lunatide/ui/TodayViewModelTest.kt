@@ -109,4 +109,7 @@ class FakeCycles(private val today: () -> LocalDate) : CycleRepository {
 class FakeLogs : DayLogRepository {
     override val logs = MutableStateFlow<List<DayLog>>(emptyList())
     override suspend fun save(log: DayLog): Result<Unit> { logs.value = logs.value.filterNot { it.day == log.day } + log; return Result.success(Unit) }
+    override suspend fun editDay(log: DayLog, periodChange: Boolean?, recent: Boolean, shorten: Boolean): Result<PeriodEdit?> {
+        require(periodChange == null); save(log).getOrThrow(); return Result.success(null)
+    }
 }

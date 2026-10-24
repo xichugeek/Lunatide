@@ -19,6 +19,9 @@ import com.xichugeek.lunatide.ui.components.PastDatePicker
 import com.xichugeek.lunatide.ui.onboarding.*
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import com.xichugeek.lunatide.ui.today.*
+import com.xichugeek.lunatide.ui.calendar.CalendarScreen
+import com.xichugeek.lunatide.ui.calendar.CalendarUiState
+import com.xichugeek.lunatide.ui.daylog.*
 import java.time.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -33,6 +36,9 @@ fun LunatideRoot(
     state: TodayUiState, actions: ActionState, onboarding: OnboardingState,
     onFinish: (LocalDate?, Int?, Int?) -> Unit, onRecord: (LocalDate, Boolean, Boolean) -> Unit,
     onUndo: () -> Unit, onSpotting: () -> Unit, onClear: () -> Unit, onRetry: () -> Unit,
+    calendar: CalendarUiState = CalendarUiState(java.time.YearMonth.from(state.today)),
+    onMoveMonth: (Int) -> Unit = {}, onCalendarToday: () -> Unit = {},
+    editor: DayEditorState? = null, editorActions: DayEditorActions = DayEditorActions(), onOpenDay: (LocalDate) -> Unit = {},
 ) {
     if (state.failed) {
         Surface(Modifier.fillMaxSize()) {
@@ -47,7 +53,6 @@ fun LunatideRoot(
     val entry by nav.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     var changeDate by remember { mutableStateOf(false) }
-    var logOpen by remember { mutableStateOf(false) }
     Scaffold(bottomBar = {
         if (route != Settings::class.qualifiedName) NavigationBar {
             val destinations = listOf(Triple(Today, R.string.today, R.drawable.ic_today), Triple(Calendar, R.string.calendar, R.drawable.ic_calendar), Triple(Statistics, R.string.statistics, R.drawable.ic_stats))
@@ -75,8 +80,8 @@ fun LunatideRoot(
     }) { padding ->
         Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.TopCenter) {
             NavHost(nav, startDestination = Today, modifier = Modifier.widthIn(max = 600.dp).fillMaxWidth()) {
-                composable<Today> { TodayScreen(state, actions.busy, { onRecord(state.today, false, false) }, { nav.navigate(Settings) }, { logOpen = true }) }
-                composable<Calendar> { Placeholder(R.string.calendar) }
+                composable<Today> { TodayScreen(state, actions.busy, { onRecord(state.today, false, false) }, { nav.navigate(Settings) }, { onClear(); onOpenDay(state.today) }) }
+                composable<Calendar> { CalendarScreen(state, calendar, onMoveMonth, onCalendarToday) { onClear(); onOpenDay(it) } }
                 composable<Statistics> { Placeholder(R.string.statistics) }
                 composable<Settings> {
                     Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -111,13 +116,7 @@ fun LunatideRoot(
         }
         AlertDialog(onDismissRequest = onClear, text = { Text(stringResource(message)) }, confirmButton = { TextButton(onClick = onClear) { Text(stringResource(R.string.done)) } })
     }
-    if (logOpen) ModalBottomSheet(onDismissRequest = { logOpen = false }) {
-        Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text(state.today.toString(), style = MaterialTheme.typography.titleLarge)
-            Text(state.logs.firstOrNull { it.day == state.today }?.note ?: stringResource(R.string.no_record))
-            TextButton(onClick = { logOpen = false }) { Text(stringResource(R.string.close)) }
-        }
-    }
+    editor?.let { DayLogSheet(it, state.settings, state.prediction, editorActions) }
 }
 
 @Composable private fun Placeholder(title: Int) {

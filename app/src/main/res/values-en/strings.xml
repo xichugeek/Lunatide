@@ -77,4 +77,17 @@
     <string name="date_invalid">Check the date: no future records, and the end must not precede the start.</string>
     <string name="no_record">No record for this day yet</string>
     <string name="close">Close</string>
+    <string name="previous_month">Previous</string><string name="next_month">Next month</string><string name="back_to_today">Back to today</string>
+    <string name="legend">Legend</string><string name="recorded_period">Recorded period</string><string name="predicted_period">Estimated period</string><string name="predicted_fertile">Estimated fertile window</string><string name="predicted_ovulation">Estimated ovulation</string><string name="has_record">Daily record</string>
+    <string name="month_period">Period this month: %1$s to %2$s</string><string name="month_no_period">No recorded period this month</string>
+    <string name="future_day">This day is in the future. Only estimates are available.</string><string name="this_day_period">This day is part of a period</string>
+    <string name="flow">Flow</string><string name="pain">Period pain</string><string name="symptoms">Symptoms</string><string name="mood">Mood</string>
+    <string name="pain_none">None</string><string name="pain_mild">Mild</string><string name="pain_moderate">Moderate</string><string name="pain_severe">Severe</string>
+    <string name="temperature">Basal temperature (℃)</string><string name="temperature_hint">For example, 36.52</string><string name="temperature_invalid">Enter 34.00–42.00 ℃, up to two decimal places</string>
+    <string name="intercourse">Intercourse</string><string name="protected_intercourse">Protected</string><string name="unprotected_intercourse">Unprotected</string>
+    <string name="note">Note</string><string name="note_hint">Anything to remember (up to 500 characters)</string><string name="note_count">%1$d / 500</string>
+    <string name="clear_day">Clear this day’s record</string><string name="clear_day_confirm">Clear this day’s feelings? Period dates will be kept.</string>
+    <string name="include_for_flow">Mark this day as part of a period?</string><string name="include_for_flow_body">This flow level needs a period record. Cancel to keep your current record.</string>
+    <string name="shorten_period">This period ended the day before</string><string name="shorten_period_body">This day and later days will be removed from this period. Their non-spotting flow will be cleared, and other records kept.</string>
+    <string name="saving">Saving</string>
 </resources>

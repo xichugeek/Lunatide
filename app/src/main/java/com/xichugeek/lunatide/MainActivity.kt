@@ -13,11 +13,15 @@ import com.xichugeek.lunatide.ui.LunatideRoot
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import com.xichugeek.lunatide.ui.today.TodayViewModel
 import com.xichugeek.lunatide.ui.onboarding.OnboardingViewModel
+import com.xichugeek.lunatide.ui.calendar.CalendarViewModel
+import com.xichugeek.lunatide.ui.daylog.DayLogViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val today: TodayViewModel by viewModels()
     private val onboarding: OnboardingViewModel by viewModels()
+    private val calendar: CalendarViewModel by viewModels()
+    private val editor: DayLogViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,10 +29,13 @@ class MainActivity : ComponentActivity() {
             val state by today.state.collectAsState()
             val actions by today.actions.collectAsState()
             val onboardingState by onboarding.state.collectAsState()
+            val calendarState by calendar.state.collectAsState()
+            val editorState by editor.state.collectAsState()
             val dark = when (state.settings.theme) { "DARK" -> true; "LIGHT" -> false; else -> isSystemInDarkTheme() }
             LunatideTheme(dark) {
                 LunatideRoot(state, actions, onboardingState, onboarding::finish,
-                    { date, recent, revise -> today.record(date, recent, revise) }, today::undo, today::spotting, today::clearMessage, today::retry)
+                    { date, recent, revise -> today.record(date, recent, revise) }, today::undo, today::spotting, today::clearMessage, today::retry,
+                    calendarState, calendar::move, calendar::today, editorState, editor.actions, editor::open)
             }
         }
     }

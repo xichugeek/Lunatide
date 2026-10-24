@@ -77,4 +77,17 @@
     <string name="date_invalid">请检查日期：不能选未来，结束日不能早于开始日。</string>
     <string name="no_record">这天还没有记录</string>
     <string name="close">关闭</string>
+    <string name="previous_month">上一月</string><string name="next_month">下一月</string><string name="back_to_today">回到今天</string>
+    <string name="legend">图例</string><string name="recorded_period">已记录经期</string><string name="predicted_period">预测经期</string><string name="predicted_fertile">预测易孕期</string><string name="predicted_ovulation">预测排卵日</string><string name="has_record">有每日记录</string>
+    <string name="month_period">本月经期：%1$s 至 %2$s</string><string name="month_no_period">本月暂无已记录经期</string>
+    <string name="future_day">还没到这一天哦，只能查看预测参考</string><string name="this_day_period">这天在经期中</string>
+    <string name="flow">经量</string><string name="pain">痛经</string><string name="symptoms">症状</string><string name="mood">心情</string>
+    <string name="pain_none">不痛</string><string name="pain_mild">轻微</string><string name="pain_moderate">明显</string><string name="pain_severe">很痛</string>
+    <string name="temperature">基础体温（℃）</string><string name="temperature_hint">例如 36.52</string><string name="temperature_invalid">请输入 34.00–42.00 ℃，最多两位小数</string>
+    <string name="intercourse">同房</string><string name="protected_intercourse">有保护</string><string name="unprotected_intercourse">无保护</string>
+    <string name="note">备注</string><string name="note_hint">想记下的事（最多 500 字）</string><string name="note_count">%1$d / 500</string>
+    <string name="clear_day">清空这天的记录</string><string name="clear_day_confirm">清空这天的感受记录？经期日期会保留。</string>
+    <string name="include_for_flow">要把这天标为经期吗？</string><string name="include_for_flow_body">这种经量需要属于经期。取消后不会改变原记录。</string>
+    <string name="shorten_period">这次经期在前一天就结束了</string><string name="shorten_period_body">这天及其后的日期将不再属于这次经期；这些日期的非点滴经量会清空，其他记录保留。</string>
+    <string name="saving">正在保存</string>
 </resources>

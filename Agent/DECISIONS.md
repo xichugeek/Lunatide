@@ -24,7 +24,7 @@
 - 背景：初次检查只发现 SDK Platform 36.1；用户明确授权自行修复开发环境并继续。
 - 决定：使用官方工具安装稳定 Platform 37.2，采用 AGP 9.4.1、Gradle 9.8.2、Kotlin 2.4.21、KSP 2.3.12、Hilt 2.60.1。AGP 内建 Kotlin，根脚本显式提升 Kotlin Gradle Plugin 到当前稳定版本；不使用旧 DSL 退出选项。
 - SDK：compileSdk 使用 API 37 minor 2；targetSdk 使用基础 API 37；minSdk 26。编译运行时可用 JBR 21，源码 Java/Kotlin toolchain 与字节码为 17。
-- 工具从官方源下载并验证官方摘要；不把 SDK、JDK 或临时构建工具提交仓库。Android CLI 显式传入 `--no-metrics`。
+- SDK 命令行工具、Gradle 从官方源下载并验证官方摘要；JDK 由 Adoptium 官方 HTTPS API 下载。它们均不提交仓库。Android CLI 显式传入 `--no-metrics`。
 - 来源：https://developer.android.com/build/releases/agp-9-4-0-release-notes 、https://developer.android.com/build/migrate-to-built-in-kotlin 、官方 Maven 元数据与 SDK repository2-3.xml。
 
 ## D-002 · 传递依赖的纯注解例外（2026-10-24）
@@ -70,3 +70,16 @@
 - 设备走查发现：仅默认 values 中文与 values-en 英文时，设置 App 语言 zh-CN 后仍可能优先命中系统第二语言英文，因为资源语言列表缺少显式 zh。
 - 构建时从默认 strings.xml 自动生成 values-zh，作为带任务依赖的资源目录；中文文案仍只有一个维护源，生成物不提交。英文保持 values-en。
 - 日期格式使用当前配置的 Locale，而非假定 JVM 的全局语言。
+
+## D-009 · 每日记录与日历细节（2026-10-24）
+- 经量关联经期开关的复合编辑以 Room 外层事务包裹经期编辑和日志保存，任何失败完全回滚；近 10 天和中间日缩短始终先确认。
+- “清空这天的记录”清空每日感受字段，保留经期日期；需要移出经期时单独使用开关，避免误改历史。
+- 自动保存防抖 300 ms，关闭 Sheet 先取消待执行任务并写入最新草稿；保存失败保留草稿和错误提示。无效体温阻止关闭，需修正或清空。
+- 自由输入使用 AndroidView/EditText，关闭联想与纠错、设置 IME_FLAG_NO_PERSONALIZED_LEARNING、禁用 View 状态保存，草稿不进入 SavedStateHandle 或 rememberSaveable。
+- 日历已记录经期的浅色填充采用更深玫瑰色 #B53E57 搭配白字，以满足文字对比度；品牌 #E0637A 保留给圆环等无文字装饰。深色经期采用浅玫瑰色与深色文字。建议 07 文档明确语义填充与装饰色的区别。
+- 日历格子按 7 列自适应，触区高度至少 56 dp；页面横边距 12 dp，为窄屏保留更多宽度，其他页面维持 20 dp。
+
+## D-010 · CI SDK 安装修复（2026-10-24）
+- GitHub 历史推送构建在 setup-android v3 默认安装已移除的 `tools` 包时失败，尚未执行项目 Gradle 检查；本地成功不能代表 CI 通过。
+- 移除该旧安装步骤，直接从 Google 官方下载固定的 Command-line Tools 23.0 Linux 包，校验官方索引中的摘要，并用新的 Android CLI（--no-metrics）显式安装 Platform 37.2 和 AGP 所需 Build Tools 36.0.0。
+- CI 同时安装 JDK 17 与 21：21 运行构建工具，17 编译源码，与本地验证组合一致；保持四项隐私/单测/Lint/APK 命令不变。经各官方仓库 latest release 核对，锁定 checkout 7.0.1、setup-java 6.1.0、gradle/actions 6.4.0。

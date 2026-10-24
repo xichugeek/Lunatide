@@ -6,12 +6,21 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-java@v6.1.0
         with:
           distribution: temurin
-          java-version: '17'
-      - uses: android-actions/setup-android@v3
-      - uses: gradle/actions/setup-gradle@v4
+          java-version: |
+            17
+            21
+      - name: Install Android SDK packages
+        shell: bash
+        run: |
+          curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip -o "$RUNNER_TEMP/lunatide-sdk-tools.zip"
+          echo "e025545c62a8e64c7559119566a569fb1dec5f60  $RUNNER_TEMP/lunatide-sdk-tools.zip" | sha1sum -c -
+          unzip -q "$RUNNER_TEMP/lunatide-sdk-tools.zip" -d "$RUNNER_TEMP/lunatide-sdk-tools"
+          "$RUNNER_TEMP/lunatide-sdk-tools/cmdline-tools/bin/android" --no-metrics --sdk="$ANDROID_HOME" sdk install 'platforms;android-37.2'
+          "$RUNNER_TEMP/lunatide-sdk-tools/cmdline-tools/bin/android" --no-metrics --sdk="$ANDROID_HOME" sdk install 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@v6.4.0
       - run: chmod +x gradlew
-      - run: ./gradlew verifyPrivacy testDebugUnitTest lintDebug assembleDebug
+      - run: ./gradlew -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64 verifyPrivacy testDebugUnitTest lintDebug assembleDebug

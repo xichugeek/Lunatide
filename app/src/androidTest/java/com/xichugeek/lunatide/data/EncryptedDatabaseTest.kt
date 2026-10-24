@@ -107,4 +107,13 @@ class EncryptedDatabaseTest {
         val log = repo.logs.first().single()
         assertEquals("Fictional note", log.note); assertNull(log.flow); assertTrue(repo.periods.first().isEmpty())
     }
+    @Test fun flowAndPeriodAreAtomicIncludingRollback() = runBlocking(Dispatchers.IO) {
+        val repo = RecordsRepository(owner, clock)
+        val invalid = DayLog(day, flow = com.xichugeek.lunatide.domain.model.Flow.MEDIUM, note = "x".repeat(501))
+        assertTrue(repo.editDay(invalid, true).isFailure)
+        assertTrue(repo.periods.first().isEmpty()); assertTrue(repo.logs.first().isEmpty())
+        repo.editDay(invalid.copy(note = "Fictional"), true).getOrThrow()
+        assertEquals(1, repo.periods.first().size)
+        assertEquals(com.xichugeek.lunatide.domain.model.Flow.MEDIUM, repo.logs.first().single().flow)
+    }
 }

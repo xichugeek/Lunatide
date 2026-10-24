@@ -26,6 +26,7 @@ interface CycleRepository {
 interface DayLogRepository {
     val logs: DataFlow<List<DayLog>>
     suspend fun save(log: DayLog): Result<Unit>
+    suspend fun editDay(log: DayLog, periodChange: Boolean?, recent: Boolean = false, shorten: Boolean = false): Result<PeriodEdit?>
 }
 
 @Singleton
@@ -77,6 +78,19 @@ class RecordsRepository @Inject constructor(private val owner: DatabaseOwner, pr
                 db.records().deleteSymptoms(log.day.toEpochDay())
                 db.records().insertSymptoms(log.symptoms.map { DaySymptomEntity(log.day.toEpochDay(), it.name) })
             }
+        }
+    }
+
+    override suspend fun editDay(log: DayLog, periodChange: Boolean?, recent: Boolean, shorten: Boolean): Result<PeriodEdit?> = storageResult {
+        val db = owner.get()
+        db.withTransaction {
+            val edit = periodChange?.let {
+                edit(if (it) PeriodAction.INCLUDE else PeriodAction.EXCLUDE, log.day, recent, shorten).getOrThrow()
+            }
+            if (edit is PeriodEdit.Rejected) return@withTransaction edit
+            val normalized = if (periodChange == false && log.flow != Flow.SPOTTING) log.copy(flow = null) else log
+            save(normalized).getOrThrow()
+            edit
         }
     }
 
