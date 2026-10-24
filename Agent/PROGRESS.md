@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- 当前里程碑：M1 已完成，准备 M2 预测引擎与统计
-- 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug assembleDebug connectedDebugAndroidTest` 成功（2026-10-24）；30 个 JVM 测试、5 个设备仪器测试全部通过
+- 当前里程碑：M2 已完成，准备 M3 首次引导与今天页
+- 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug assembleDebug` 成功（2026-10-24）；累计 61 个 JVM 测试通过。M1 的 5 个仪器测试通过，本次纯 Kotlin 变更未重复执行
 - 阻塞问题：无；原 SDK 缺失已自行修复
 
 ## 环境
@@ -28,6 +28,16 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### M2 · 预测引擎与统计 —— ✅ 完成（2026-10-24）
+- 完成内容：纯 Kotlin 预测/统计、最近 12 个周期硬过滤与中位数离群过滤、最近 6 个加权平均、先验/手动优先、置信度和范围、进行中上限、固定原始预测与推迟顺延、易孕期裁剪与隐藏原因、症状 Top 5、痛经分布、规律性和温和提示。
+- 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（新增 31，累计 61 tests，0 failures/errors）/ `lintDebug` ✅（0 error、原有 1 warning）/ `assembleDebug` ✅；仪器测试本次未重复执行（纯 Kotlin 计算变更，M1 结果保留）。
+- 验收清单：A1～A5 ✅；C1 ✅（06 §8 全部 25 个场景按 t01～t25 对应）；C3～C4 计算逻辑 ✅（UI 待 M3/M4）；C5 固定样例计算 ✅（统计页待 M5）；G8 ✅。20 年虚构数据测试为 260 次经期、7300 条日志，计算可完成；滚动流畅度尚未验证。
+- 决策：D-006（标准差、日期倒退、数据范围与排序复杂度说明）。
+- 提交：本次 `feat(prediction): 实现周期预测与统计并覆盖规范场景`。
+- M1 提交与推送：`da79d2c` 已成功推送 `origin/main`。
+- 遗留问题：上述预测还未接入 UI；不能以 JVM 性能结论替代中端真机体验验证。
+- 下一步：M3 首次引导、今天状态卡、操作撤销/改日期与 ViewModel 测试。
 
 ### M1 · 数据层 —— ✅ 完成（2026-10-24）
 - 完成内容：三张 Room 表与 DAO、显式领域映射、稳定枚举、百分度体温、schema v1 导出；SQLCipher + Keystore AES-GCM 包裹随机口令；可注入工厂、非破坏性错误；DataStore 设置与可注入 TodayProvider；周期/日志 Repository 与事务化经期编辑。
