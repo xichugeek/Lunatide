@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">月汐</string>
+    <string name="today">今天</string>
+    <string name="calendar">日历</string>
+    <string name="statistics">统计</string>
+    <string name="welcome">欢迎来到月汐</string>
+    <string name="tagline">不注册、不联网、无广告，只属于你的周期记录</string>
+    <string name="placeholder">这里将呈现只属于你的记录</string>
+</resources>

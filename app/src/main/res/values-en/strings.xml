@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Lunatide</string>
+    <string name="today">Today</string>
+    <string name="calendar">Calendar</string>
+    <string name="statistics">Statistics</string>
+    <string name="welcome">Welcome to Lunatide</string>
+    <string name="tagline">No account, no network, no ads. Your cycle, yours alone.</string>
+    <string name="placeholder">Your private records will appear here</string>
+</resources>
