@@ -18,6 +18,7 @@ import java.time.LocalDate
 
 @Composable
 fun OnboardingScreen(today: LocalDate, state: OnboardingState, onDraft: (OnboardingDraft) -> Unit = {},
+    pinSet: Boolean = false, onPin: () -> Unit = {},
     remindersEnabled: Boolean = false, onReminderToggle: (Boolean) -> Unit = {}, onFinish: (LocalDate?, Int?, Int?) -> Unit) {
     val draft = state.draft
     val page = draft.page
@@ -51,6 +52,7 @@ fun OnboardingScreen(today: LocalDate, state: OnboardingState, onDraft: (Onboard
                     3 -> {
                         Text(stringResource(R.string.security_optional), style = MaterialTheme.typography.headlineMedium)
                         Text(stringResource(R.string.security_optional_body), style = MaterialTheme.typography.bodyLarge)
+                        if (pinSet) Text(stringResource(R.string.pin_enabled)) else OutlinedButton(onClick = onPin) { Text(stringResource(R.string.pin_enable)) }
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(stringResource(R.string.reminder_upcoming), Modifier.weight(1f))
                             Switch(remindersEnabled, onReminderToggle)

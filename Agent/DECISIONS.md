@@ -98,3 +98,11 @@
 - 引导全部草稿放 ViewModel 内存，日期选择器采用 remember + DatePickerState 工厂，不使用保存日期的 rememberSaveable；旋转保留引导草稿，进程结束不落系统状态存档。已完成记录仍只在 SQLCipher 中保存。
 - Lint 对 ProfileInstallReceiver 的移除标记报告 MissingClass；仅对此 tools:node=remove 节点局部忽略。最终 Manifest 中该组件确实不存在；未对实际注册组件关闭 MissingClass 检查。
 - 源码检查额外禁止直接使用记忆状态存档 API（rememberSaveable、SavedStateHandle），防止后续健康字段误写系统状态；当前手写 UI 状态均采用 ViewModel/内存，不需要非健康字段豁免。
+
+## D-013 · 应用锁与 PIN 持久化（2026-10-24）
+- 使用 AndroidX Biometric 稳定版 1.1.0（官方稳定版本表核对，https://developer.android.com/jetpack/androidx/releases/biometric）与 Lifecycle Process 2.11.0；优先 STRONG，仅在不可用时回退 WEAK。绝不允许 DEVICE_CREDENTIAL；无 PIN 无法启用生物识别。
+- PIN 使用 16 字节随机盐、PBKDF2-HMAC-SHA256 120000 次、32 字节哈希；运算移至 Default，比较使用 MessageDigest.isEqual。PIN 草稿仅在内存，自绘键盘不调用输入法、不播放按键音；取消/完成时清除确认缓冲。
+- security.preferences_pb 单独保存哈希和错误次数、剩余冷却、uptime 锚点；记录启动时间估计以检测重启。重启/时钟大改时保守重计上次保存的剩余时长，绝不因输错清除数据；冷却期间最多每 5 秒保存一次检查点。
+- ProcessLifecycleOwner 作为进程锁定依据，同时 Activity 在真正离开（排除配置变化）时提前设置锁状态，避免立即锁定受 ProcessLifecycleOwner 的延迟派发影响。外部跳转豁免只用于应用主动发起的系统权限/设置/文件选择器，并在返回时清除。
+- 双存储未读取完成时访问门默认关闭；锁定时不组合底层导航/记录界面。开启应用锁默认开启 FLAG_SECURE，窗口创建初始即保护，读取到明确关闭设置后才解除。
+- 忘记 PIN 仅提供两次确认后清除数据，无恢复 PIN 或跳过入口；英文确认词使用 DELETE，中文使用删除。删除与后续 M8 数据页共用清理器，成功后以新 Activity/全新 ViewModel 返回引导。

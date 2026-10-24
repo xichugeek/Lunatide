@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- 当前里程碑：M6 已完成，准备 M7 应用锁；引导 PIN 可选设置待 M7 接通
-- 最近一次构建：四项检查成功（2026-10-24）；累计 102 个 JVM 测试、9 个仪器测试通过；Lint 0 error、原有 1 warning
+- 当前里程碑：M7 已完成，准备 M8 备份与数据管理；引导提醒/PIN 均已接通
+- 最近一次构建：四项检查成功（2026-10-24）；累计 109 个 JVM 测试、11 个仪器测试通过；Lint 0 error、原有 1 warning
 - 阻塞问题：无；原 SDK 缺失已自行修复
 
 ## 环境
@@ -29,6 +29,15 @@
 
 ## 里程碑记录
 
+### M7 · 应用锁与隐私设置 —— ✅ 实现完成（2026-10-24）
+- 完成内容：4–6 位 PIN 自绘键盘、两次确认、旧 PIN 验证后修改/关闭、PBKDF2 哈希、生物识别快捷方式、自动锁定与外部跳转豁免、持久化输错限制、防截屏开关、忘记 PIN 的两次确认清除入口；锁屏不渲染底层页面；引导 PIN 接通。
+- 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（新增 7，累计 109 tests，0 failures/errors）/ `lintDebug` ✅（0 error、原有 1 warning）/ `assembleDebug` ✅ / `connectedDebugAndroidTest` ✅（新增 2，累计 11 tests，0 failures/errors/skipped）。Lint 首轮发现缩进与两项 warning 已修复，最终全套成功。
+- 设备走查：设置两次 PIN → 离开到桌面并返回要求解锁；强制停止后冷启动要求解锁，UI 树不含首页记录；实际输错五次出现 30 秒冷却，立即强停重开仍在倒计时；忘记 PIN → 说明 → 删除二次确认 → 取消，仍回锁屏，无绕过。窗口 dumpsys 包含 SECURE，实际 adb 截图为全黑（本机临时文件）。
+- 验收：A1～A5 ✅；E3 默认立即/冷启动 ✅（其他超时设备组合未穷举）；E4 ✅；E5 无 PIN 禁用生物识别、无系统密码回退已实现与静态核对，真实指纹/面容认证 ⏭ 未验证；E6 截图阻止 ✅、最近任务系统缩略图 ⏭ 未验证；E7 无绕过/二次确认 ✅，实际删除后恢复在 M8 完整验证；G8～G9 ✅。
+- 决策：D-013；依赖均为 AndroidX，最终 debug/release Manifest 无网络权限，源码豁免为零。
+- 提交：本次 `feat(security): 实现应用锁与持久化输错保护`。
+- M6 提交与推送：`6153f56` 已成功推送 `origin/main`。
+- 下一步：M8 加密备份、CSV、完整数据清除与数据库恢复页。
 ### M6 · 提醒 —— ✅ 实现完成（2026-10-24）
 - 完成内容：5 种本地通知、双语言隐私正文与中性 publicVersion、按类型唯一 WorkManager 调度与每日兜底重算、数据/设置/前台日期变化重算、Worker 发送前复核；设置页与引导接入、用户主动申请权限、拒绝后引导及 ROM 说明。
 - 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（新增 14，累计 102 tests，0 failures/errors）/ `lintDebug` ✅（0 error、原有 1 warning）/ `assembleDebug` ✅ / `connectedDebugAndroidTest` ✅（新增 2，累计 9 tests，0 failures/errors/skipped）。

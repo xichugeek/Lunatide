@@ -84,6 +84,8 @@ dependencies {
     implementation(libs.sqlcipher)
     implementation(libs.coroutines)
     implementation(libs.work)
+    implementation(libs.biometric)
+    implementation(libs.lifecycle.process)
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
     debugImplementation(libs.compose.tooling)
