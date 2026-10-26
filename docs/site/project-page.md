@@ -31,7 +31,7 @@ Android API 35 模拟器实际运行，简体中文，包含浅色与深色模�
 
 # 4. 下载与正式版本
 
-以下信息由真实签名构建生成。下载链接在维护者发布对应 GitHub Release 后生效。
+本版本已在 GitHub Releases 正式发布，以下校验信息来自真实签名构建。
 
 - 版本：1.0.1（versionCode 10001）
 - APK 文件：Lunatide-v1.0.1.apk

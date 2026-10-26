@@ -21,7 +21,7 @@
 - APK SHA-256：`bef52aebb8a753805ef505a026b37eabbdda350290a613f88a71b2db45335bbf`
 - 签名证书 SHA-256：`4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676`
 
-下载链接在对应 GitHub Release 正式发布后生效，是否已发布请查看 Releases 页面。
+此版本已正式发布：[Release Notes](https://github.com/xichugeek/Lunatide/releases/tag/v1.0.1)。
 <!-- RELEASE_INFO_END -->
 
 需要 Android 8.0 或以上。升级时直接覆盖安装，不要先卸载；卸载或换机前先导出加密备份。月汐不会联网检查更新。
@@ -40,7 +40,7 @@
 
 ## 功能
 
-> 1.0.1 已完成月夜与潮汐界面调整，可查看[三页实际运行对照（虚构数据）](docs/previews/1.0.1/README.md)。下载状态请以对应 GitHub Release 为准。
+> 1.0.1 已正式发布，月夜与潮汐界面的[三页实际运行对照（虚构数据）](docs/previews/1.0.1/README.md)与上方下载版本一致。
 
 - 一键记录开始和结束，支持撤销、改日期与点滴出血。
 - 日历查看已记录经期和预测；预测仅供参考，不能用于避孕或代替医生诊断。

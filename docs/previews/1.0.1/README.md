@@ -20,4 +20,4 @@
 
 本轮 `verifyPrivacy testDebugUnitTest lintDebug assembleDebug`、`lintRelease assembleRelease` 及发布脚本均通过，129 个 JVM 测试、15 个 API 35 仪器测试通过；两个 Lint 均为 0 error、2 个已有 warning。同证书 1.0.0 → 1.0.1 升级后虚构记录保留。实体机和完整真人 TalkBack 仍未验证。
 
-本目录保留 1.0.1 的实际运行视觉记录。正式发布状态及下载请查看 [GitHub Releases](https://github.com/xichugeek/Lunatide/releases)，官网配套素材见 [docs/site](../../site/project-page.md)。
+本目录保留 1.0.1 的实际运行视觉记录。[v1.0.1 已正式发布](https://github.com/xichugeek/Lunatide/releases/tag/v1.0.1)，官网配套素材见 [docs/site](../../site/project-page.md)。
