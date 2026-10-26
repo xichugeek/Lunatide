@@ -10,7 +10,11 @@ function Write-Utf8Lf([string]$path, [string]$value) {
 }
 $source = Join-Path $root 'dist/release-info.json'
 if (-not (Test-Path -LiteralPath $source)) { throw '缺少真实 release-info.json。请先由人类配置正式签名，并成功运行 release.ps1；不生成虚假的校验信息。' }
-$info = Get-Content -LiteralPath $source -Raw | ConvertFrom-Json
+$sourceText = Get-Content -LiteralPath $source -Raw
+$info = $sourceText | ConvertFrom-Json
+$sourceJson = [System.Text.Json.JsonDocument]::Parse($sourceText)
+try { $info.builtAt = $sourceJson.RootElement.GetProperty('builtAt').GetString() }
+finally { $sourceJson.Dispose() }
 if ($info.apkFile -notmatch '^Lunatide-v\d+\.\d+\.\d+\.apk$' -or $info.apkSha256 -notmatch '^[a-f0-9]{64}$' -or $info.signerCertSha256 -notmatch '^[a-f0-9]{64}$') { throw '发布信息格式无效。' }
 $apk = Join-Path $root ('dist/' + $info.apkFile)
 if ((Get-FileHash -LiteralPath $apk -Algorithm SHA256).Hash.ToLowerInvariant() -ne $info.apkSha256 -or (Get-Item -LiteralPath $apk).Length -ne $info.apkBytes) { throw '发布信息与 APK 不匹配。' }
@@ -34,4 +38,4 @@ $block = @"
 if ($readme -notmatch '(?s)<!-- RELEASE_INFO_START -->.*?<!-- RELEASE_INFO_END -->') { throw 'README 缺少发布信息标记。' }
 $readme = [regex]::Replace($readme, '(?s)<!-- RELEASE_INFO_START -->.*?<!-- RELEASE_INFO_END -->', [System.Text.RegularExpressions.MatchEvaluator]{ param($match) $block })
 Write-Utf8Lf (Join-Path $root 'README.md') $readme
-Write-Host '已从真实签名构建更新官网信息及 README。请检查文档并提交；尚未推送标签或创建 Release。'
+Write-Host '已从真实签名构建更新官网信息及 README，请检查并提交文档。'

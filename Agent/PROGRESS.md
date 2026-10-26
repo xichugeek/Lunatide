@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- 当前里程碑：M0～M10 发布准备完成；2026-10-26 用户明确同意公开发布 v1.0.0，正在执行标签推送和 GitHub Release 附件上传，尚未把发布结果标成功
+- 当前里程碑：M0～M10 完成；v1.0.0 已于 2026-10-26 正式公开发布：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0 ，两个附件已匿名下载并校验通过
 - 最近一次构建：四项必跑检查及 `lintRelease assembleRelease` 成功（2026-10-26）；129 个 JVM 测试、独立 AVD 上 15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
 - 签名与产物：用户在本机完成配置，release.ps1 全流程通过；正式 APK/sha256/release-info/Release Notes 位于被忽略的 dist，公开元数据及文案位于 docs/site。正式证书旧版覆盖升级已通过，原模拟器记录未删除。真机、完整 TalkBack 等未验证项仍明确保留。
 
@@ -29,11 +29,18 @@
 
 ## 里程碑记录
 
-### v1.0.0 公开发布 —— 🚧 已获明确授权，正在执行（2026-10-26）
+### v1.0.0 公开发布 —— ✅ 完成（2026-10-26）
 - 用户对推送 v1.0.0 标签、创建 GitHub Release 并上传 APK/校验文件明确回复“是的”，按 09 §7 / 11 §4 继续执行，不再重复请求确认。
 - a18b4c2 的 CI 已 success：https://github.com/xichugeek/Lunatide/actions/runs/40253776724 。正式 APK、证书指纹、文件大小与上轮人类批准的版本一致；本轮不重签或更改 APK。
 - 使用现有 Git 登录通过 GitHub API 发布，仅在进程内使用凭据，不输出或保存凭据；没有读取签名密钥或本机签名配置。只允许上传 Lunatide-v1.0.0.apk 及其 .sha256。
 - CHANGELOG 记录正式日期，Release 正文补充验证范围和未验证项目。先创建草稿并验证附件，再公开；完成后下载公开附件独立核对哈希与签名并补记结果。官网尚未部署。
+- 发布地址：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0 ，正式发布状态 draft=false / prerelease=false，亦为 latest；GitHub 发布时间换算为上海时间 2026-10-26 10:39:47。
+- 注释标签 v1.0.0 已推送，指向 cd17e132ae78781c44f1048b4520bd857e2ed5e8；没有改写标签或历史。该提交的 main/tag CI 均 success：https://github.com/xichugeek/Lunatide/actions/runs/40260058230 。App 实际构建源提交仍为公开元数据记录的 663d0d8。
+- 附件仅 Lunatide-v1.0.0.apk（10,118,356 字节）和 .apk.sha256（86 字节）；GitHub 服务器 digest 与批准哈希一致，正文包含实际文件哈希、签名指纹及安装升级/未验证项说明。
+- 草稿上传后首次下载检查使用了发布前的资产元数据，地址核对停止；公开后刷新元数据，匿名下载两个正式附件，逐字节哈希均与本机批准文件一致，公开 APK 的 apksigner 验证和正式证书指纹一致。首次未完成的验证未标成功，也没有重复创建 Release 或上传额外文件。
+- 本轮只修改发布日期、文档和素材生成脚本，未改动 App 或重签 APK，未重复运行业务/仪器测试；沿用已验证的 129 JVM / 15 API 35 仪器结果及源码 CI。真机性能、完整 TalkBack、真实生物识别等未验证状态保持不变，Release 正文已说明。
+- README 与官网素材回填正式发布状态；素材脚本修正 PowerShell 自动日期转换导致时区丢失的问题，文案保留 release-info.json 原始 ISO-8601 +08:00 构建时间。官网由独立流程使用 docs/site 上线，本次没有执行官网部署。
+- 决策：D-019。公开发布及下载验证完成，后续仅由官网独立流程使用素材包，无新的签名或发布授权待确认。
 
 ### M10 · 正式签名与发布准备 —— ✅ 完成，待公开发布授权（2026-10-26）
 - 完成内容：用户本机正式签名；release.ps1 全流程；最终 APK 权限/签名/示例隔离/SDK 校验；独立哈希；完整官网元数据、文案及 README；独立 AVD 仪器测试与同证书旧版覆盖升级。没有推送标签、创建 Release 或部署官网。

@@ -21,7 +21,7 @@
 - APK SHA-256：`77e0902292ec9304619b0f31d9cf492a50e4556675c44258b5076d4e5414a39b`
 - 签名证书 SHA-256：`4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676`
 
-下载链接在对应 GitHub Release 正式发布后生效，是否已发布请查看 Releases 页面。
+此版本已正式发布：[Release Notes](https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0)。
 <!-- RELEASE_INFO_END -->
 
 需要 Android 8.0 或以上。升级时直接覆盖安装，不要先卸载；卸载或换机前先导出加密备份。月汐不会联网检查更新。
