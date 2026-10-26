@@ -58,8 +58,11 @@ try {
     $badging = (& $aapt dump badging $apk 2>&1 | Out-String)
     Require-Success '无法核对 APK 包名和版本。'
     if ($badging -notmatch "package: name='com.xichugeek.lunatide' versionCode='$versionCode' versionName='$([regex]::Escape($version))'") { throw 'APK 包名或版本号与源码不一致。' }
-    $minSdk = [int]([regex]::Match($badging, "sdkVersion:'(\d+)'").Groups[1].Value)
-    $targetSdk = [int]([regex]::Match($badging, "targetSdkVersion:'(\d+)'").Groups[1].Value)
+    $minSdkMatch = [regex]::Match($badging, "(?m)^(?:minSdkVersion|sdkVersion):'(\d+)'")
+    $targetSdkMatch = [regex]::Match($badging, "(?m)^targetSdkVersion:'(\d+)'")
+    if (-not $minSdkMatch.Success -or -not $targetSdkMatch.Success) { throw '无法从最终 APK 解析最低/目标 SDK，停止发布。' }
+    $minSdk = [int]$minSdkMatch.Groups[1].Value
+    $targetSdk = [int]$targetSdkMatch.Groups[1].Value
     if ($minSdk -ne 26 -or $targetSdk -lt 37) { throw 'APK 的最低/目标 SDK 不符合当前发布要求。' }
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $zip = [IO.Compression.ZipFile]::OpenRead($apk)

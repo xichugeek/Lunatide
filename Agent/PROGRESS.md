@@ -6,7 +6,7 @@
 
 - 当前里程碑：M0～M9 已实现并推送；M10 本地构建、中文素材与发布准备已就绪，等待人类生成正式签名，不标 M10 完成
 - 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug lintRelease assembleDebug assembleRelease` 成功（2026-10-24）；129 个 JVM 测试、15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
-- 签名设置：用户已授权代执行命令，已启动“月汐 · 正式签名”本机交互窗口，由用户直接输入密码后生成密钥及被忽略的 keystore.properties；不需要向聊天发送密码。尚未推送 tag、创建 Release 或部署官网。
+- 签名设置：2026-10-26 用户在本机完成生成，密钥与被忽略的 keystore.properties 已存在，正式签名构建成功；不读取或输出密码。首次发布脚本遇到 aapt2 字段兼容问题，修复后继续完整流程。尚未推送 tag、创建 Release 或部署官网。
 
 ## 环境
 
@@ -28,6 +28,13 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### M10 恢复 · 正式签名构建 —— 🚧 继续验收（2026-10-26）
+- 关机后工作区干净，JBR 21/SDK 可用；重开本机交互签名窗口，用户完成密钥和配置。原 Pixel_7 恢复启动，App 冷启动成功、语言仍为 zh-CN，原记录保留。
+- 本轮四项检查 `verifyPrivacy testDebugUnitTest lintDebug assembleDebug` ✅（129 tests、0 failures/errors/skipped；Lint 0 error、2 已说明 warnings）。没有把上轮 15 个仪器测试说成本轮重新执行。
+- 首次正式签名 `verifyPrivacy testDebugUnitTest lintRelease assembleRelease` ✅；release.ps1 后续 SDK 检查 ❌：Build Tools 37 输出 minSdkVersion，旧解析只认 sdkVersion，得到空值后安全停止，没有生成正式元数据。已兼容两个精确字段并在字段缺失时明确失败，等待干净提交后重跑。
+- 上轮 583634b 的 CI 已 success：https://github.com/xichugeek/Lunatide/actions/runs/40068109726 。当前正式包与升级将在独立测试 AVD 验收，避免删除原模拟器记录。
+- 决策：D-018；M10 尚未标完成，未创建 tag/Release。
 
 ### M10 继续 · 本机交互签名设置 —— 🚧 等待窗口内输入（2026-10-24）
 - 用户明确授权代执行上一轮签名命令。新增 setup-signing.ps1 并已在独立可见 PowerShell 窗口启动，固定项目证书主体，不要求填写个人姓名/住址；用户在窗口输入密码，代理不读取密码或配置内容。
