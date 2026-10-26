@@ -4,9 +4,9 @@
 
 ## 当前状态
 
-- 当前里程碑：M0～M10 完成；v1.0.0 已于 2026-10-26 正式公开发布：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0 ，两个附件已匿名下载并校验通过
+- 当前工作：1.0.1 视觉修正与设备回归完成，正在整理同证书签名测试包；v1.0.0 仍是已公开版本，既有发布包与官网校验信息保留
 - 最近一次构建：四项必跑检查及 `lintRelease assembleRelease` 成功（2026-10-26）；129 个 JVM 测试、独立 AVD 上 15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
-- 签名与产物：用户在本机完成配置，release.ps1 全流程通过；正式 APK/sha256/release-info/Release Notes 位于被忽略的 dist，公开元数据及文案位于 docs/site。正式证书旧版覆盖升级已通过，原模拟器记录未删除。真机、完整 TalkBack 等未验证项仍明确保留。
+- 签名与产物：既有本机正式签名可用；1.0.0 → 1.0.1 覆盖升级已在独立 AVD 通过，原 Pixel_7 未覆盖或清空。1.0.1 预览位于 docs/previews/1.0.1，公开下载信息仍在 docs/site 对应 1.0.0。真机、完整 TalkBack 等未验证项仍明确保留。
 
 ## 环境
 
@@ -28,6 +28,15 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### 1.0.1 · 示意图视觉修正 —— ✅ 实现与回归完成，待整理签名测试包（2026-10-26）
+- 用户明确要求按所附 Claude 示意继续修改。首页改为暖白/深色画布上的独立细圆环、日期头、主题主按钮、紧凑摘要与可展开周期参考；日历常驻形状图例/紧凑月份摘要、底部轻量文字导航；周期语义色集中管理，随浅/深色主题切换。版本 1.0.1 / 10001。
+- 本轮验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（129 tests，0 failures/errors/skipped）/ `lintDebug` ✅ / `assembleDebug` ✅ / `lintRelease` ✅ / `assembleRelease` ✅。两个 Lint 均 0 error、2 个原有 warnings（D-003 / D-015）；移除不再使用的导航图标/字符串，并改用窗口尺寸 API，新增 warning 已处理。未新增依赖或权限。
+- `connectedDebugAndroidTest` ✅：独立 Lunatide_UI_QA、API 35，15 tests，0 failures/errors/skipped。实际走查浅色首页/日历、深色经期第 3 天、200% 字号首页/日历、200% 字号横屏、英文首页/日历；没有把自动测试或语义检查等同于完整真人 TalkBack。
+- 六张真实运行截图及双语标题位于 `docs/previews/1.0.1/`；全部使用虚构记录，截图明确标注未发布。截图用临时模拟日期展示预测，完成后已恢复真实时钟、中文、100% 字号和竖屏。已发布 1.0.0 截图、APK 和官网元数据未覆盖。
+- 正式签名升级 ✅：独立 Lunatide_Release_QA 原装 1.0.0 / 10000，核对新版证书与原正式指纹一致后直接 `install -r` 1.0.1 / 10001；升级前后记录日期语义完全一致，经量多/痛经明显/疲倦/平静与虚构备注保留，三个 Tab 可用。旧 QA 首次端口启动未连接，换用独立端口并关闭 Vulkan 后恢复；没有擦除 AVD 数据，原 Pixel_7 未操作。
+- 验收复核：A1～A5、C2、G8 ✅；G1/G2/G4/G5 本次受影响页面组合实测通过，完整所有页面组合、G3 真人 TalkBack、G6 中端真机性能仍未验证；H12 同证书升级 ✅。其余不受本轮改动影响的结果沿用下方历史记录，不宣称全部重新实测。
+- 决策：D-020。下一步：提交推送后运行 release.ps1，独立复核签名测试包及元数据；没有推送 1.0.1 标签或创建 Release，公开发布需按 09 §7 另获明确同意。
 
 ### v1.0.0 公开发布 —— ✅ 完成（2026-10-26）
 - 用户对推送 v1.0.0 标签、创建 GitHub Release 并上传 APK/校验文件明确回复“是的”，按 09 §7 / 11 §4 继续执行，不再重复请求确认。
@@ -296,5 +305,5 @@
 
 - [x] 开源许可证：MIT（已确定）
 - [x] 发布渠道：GitHub Releases + 官网项目页（已确定）
-- [ ] release 签名密钥（M10 时由人类生成）
+- [x] release 签名密钥（人类已在本机生成并完成配置，正式构建验证通过）
 - [ ] 官网项目页最终 slug（计划 `/projects/lunatide/`）

@@ -5,7 +5,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +24,7 @@ import com.xichugeek.lunatide.data.settings.AppSettings
 import com.xichugeek.lunatide.domain.prediction.predict
 import com.xichugeek.lunatide.domain.usecase.*
 import com.xichugeek.lunatide.ui.components.PastDatePicker
+import com.xichugeek.lunatide.ui.components.QuietNavigation
 import com.xichugeek.lunatide.ui.onboarding.*
 import com.xichugeek.lunatide.ui.theme.LunatideTheme
 import com.xichugeek.lunatide.ui.today.*
@@ -91,12 +91,10 @@ fun LunatideRoot(
         }
     }
     Scaffold(bottomBar = {
-        if (showTabs) NavigationBar(containerColor = MaterialTheme.colorScheme.background, tonalElevation = 0.dp) {
-            val destinations = listOf(Triple(Today, R.string.today, R.drawable.ic_today), Triple(Calendar, R.string.calendar, R.drawable.ic_calendar), Triple(Statistics, R.string.statistics, R.drawable.ic_stats))
-            destinations.forEach { (destination, label, icon) ->
-                NavigationBarItem(selected = currentDestination?.hasRoute(destination::class) == true,
-                    onClick = { nav.navigate(destination) { popUpTo(nav.graph.startDestinationId) { saveState = true }; launchSingleTop = true; restoreState = true } },
-                    icon = { Icon(painterResource(icon), null) }, label = { Text(stringResource(label)) })
+        if (showTabs) {
+            val destinations = listOf(Today, Calendar, Statistics)
+            QuietNavigation(destinations.indexOfFirst { currentDestination?.hasRoute(it::class) == true }) { index ->
+                nav.navigate(destinations[index]) { popUpTo(nav.graph.startDestinationId) { saveState = true }; launchSingleTop = true; restoreState = true }
             }
         }
     }, snackbarHost = {

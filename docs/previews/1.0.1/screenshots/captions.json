@@ -1,0 +1,8 @@
+{
+  "01-today.png": { "zh": "今天 · 虚构示例数据", "en": "Today · fictional sample data" },
+  "02-calendar.png": { "zh": "日历 · 虚构示例数据", "en": "Calendar · fictional sample data" },
+  "03-daylog.png": { "zh": "每日记录 · 虚构示例数据", "en": "Daily record · fictional sample data" },
+  "04-stats.png": { "zh": "统计 · 虚构示例数据", "en": "Statistics · fictional sample data" },
+  "05-privacy.png": { "zh": "隐私与安全 · 虚构示例数据", "en": "Privacy and security · fictional sample data" },
+  "06-today-dark.png": { "zh": "深色经期中 · 虚构示例数据", "en": "Dark mode during a period · fictional sample data" }
+}

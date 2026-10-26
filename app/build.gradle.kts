@@ -19,7 +19,7 @@ android {
         applicationId = "com.xichugeek.lunatide"
         minSdk = 26
         targetSdk = 37
-        versionName = "1.0.0"
+        versionName = "1.0.1"
         val parts = requireNotNull(versionName).split('.').map(String::toInt)
         versionCode = parts[0] * 10000 + parts[1] * 100 + parts[2]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
