@@ -12,7 +12,7 @@
 
 ## 下载
 
-正式版本通过 [GitHub Releases](https://github.com/xichugeek/Lunatide/releases) 和[官网项目页](https://xichugeek.com/projects/lunatide/)提供；官网地址为计划发布地址。当前处于首次正式签名与发布准备阶段，请以 Releases 中实际发布的条目为准。
+正式 APK 通过 [GitHub Releases](https://github.com/xichugeek/Lunatide/releases) 分发。[官网项目页](https://xichugeek.com/projects/lunatide/)为计划发布地址，由独立流程上线；请以 Releases 中实际发布的条目为准。
 
 <!-- RELEASE_INFO_START -->
 已签名构建：v1.0.0（10000），10118356 字节。

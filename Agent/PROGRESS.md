@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- 当前里程碑：M0～M10 发布准备已实现；正式签名包与官网素材已就绪，等待人类明确同意推送 v1.0.0 标签并创建 GitHub Release；尚未公开发布
+- 当前里程碑：M0～M10 发布准备完成；2026-10-26 用户明确同意公开发布 v1.0.0，正在执行标签推送和 GitHub Release 附件上传，尚未把发布结果标成功
 - 最近一次构建：四项必跑检查及 `lintRelease assembleRelease` 成功（2026-10-26）；129 个 JVM 测试、独立 AVD 上 15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
 - 签名与产物：用户在本机完成配置，release.ps1 全流程通过；正式 APK/sha256/release-info/Release Notes 位于被忽略的 dist，公开元数据及文案位于 docs/site。正式证书旧版覆盖升级已通过，原模拟器记录未删除。真机、完整 TalkBack 等未验证项仍明确保留。
 
@@ -28,6 +28,12 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### v1.0.0 公开发布 —— 🚧 已获明确授权，正在执行（2026-10-26）
+- 用户对推送 v1.0.0 标签、创建 GitHub Release 并上传 APK/校验文件明确回复“是的”，按 09 §7 / 11 §4 继续执行，不再重复请求确认。
+- a18b4c2 的 CI 已 success：https://github.com/xichugeek/Lunatide/actions/runs/40253776724 。正式 APK、证书指纹、文件大小与上轮人类批准的版本一致；本轮不重签或更改 APK。
+- 使用现有 Git 登录通过 GitHub API 发布，仅在进程内使用凭据，不输出或保存凭据；没有读取签名密钥或本机签名配置。只允许上传 Lunatide-v1.0.0.apk 及其 .sha256。
+- CHANGELOG 记录正式日期，Release 正文补充验证范围和未验证项目。先创建草稿并验证附件，再公开；完成后下载公开附件独立核对哈希与签名并补记结果。官网尚未部署。
 
 ### M10 · 正式签名与发布准备 —— ✅ 完成，待公开发布授权（2026-10-26）
 - 完成内容：用户本机正式签名；release.ps1 全流程；最终 APK 权限/签名/示例隔离/SDK 校验；独立哈希；完整官网元数据、文案及 README；独立 AVD 仪器测试与同证书旧版覆盖升级。没有推送标签、创建 Release 或部署官网。
