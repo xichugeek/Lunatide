@@ -18,7 +18,7 @@
 已签名构建：v1.0.0（10000），10118356 字节。
 
 - APK：[Lunatide-v1.0.0.apk](https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk)
-- APK SHA-256：`ad402147182072e18d01663b47b48bc61bd06e44e072a5232f7cc4b7e4a6e67a`
+- APK SHA-256：`77e0902292ec9304619b0f31d9cf492a50e4556675c44258b5076d4e5414a39b`
 - 签名证书 SHA-256：`4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676`
 
 下载链接在对应 GitHub Release 正式发布后生效，是否已发布请查看 Releases 页面。

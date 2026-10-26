@@ -4,9 +4,9 @@
 
 ## 当前状态
 
-- 当前里程碑：M0～M9 已实现并推送；M10 本地构建、中文素材与发布准备已就绪，等待人类生成正式签名，不标 M10 完成
-- 最近一次构建：`verifyPrivacy testDebugUnitTest lintDebug lintRelease assembleDebug assembleRelease` 成功（2026-10-24）；129 个 JVM 测试、15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
-- 签名设置：2026-10-26 用户在本机完成生成，密钥与被忽略的 keystore.properties 已存在，正式签名构建成功；不读取或输出密码。首次发布脚本遇到 aapt2 字段兼容问题，修复后继续完整流程。尚未推送 tag、创建 Release 或部署官网。
+- 当前里程碑：M0～M10 发布准备已实现；正式签名包与官网素材已就绪，等待人类明确同意推送 v1.0.0 标签并创建 GitHub Release；尚未公开发布
+- 最近一次构建：四项必跑检查及 `lintRelease assembleRelease` 成功（2026-10-26）；129 个 JVM 测试、独立 AVD 上 15 个仪器测试通过；两个变体 Lint 均为 0 error、2 warnings（D-003 / D-015）
+- 签名与产物：用户在本机完成配置，release.ps1 全流程通过；正式 APK/sha256/release-info/Release Notes 位于被忽略的 dist，公开元数据及文案位于 docs/site。正式证书旧版覆盖升级已通过，原模拟器记录未删除。真机、完整 TalkBack 等未验证项仍明确保留。
 
 ## 环境
 
@@ -28,6 +28,21 @@
 - Git 可用；`git ls-remote https://github.com/xichugeek/Lunatide.git` 成功且没有返回任何 refs；本地尚不是 Git 仓库。没有提交、推送、创建标签或 Release。
 
 ## 里程碑记录
+
+### M10 · 正式签名与发布准备 —— ✅ 完成，待公开发布授权（2026-10-26）
+- 完成内容：用户本机正式签名；release.ps1 全流程；最终 APK 权限/签名/示例隔离/SDK 校验；独立哈希；完整官网元数据、文案及 README；独立 AVD 仪器测试与同证书旧版覆盖升级。没有推送标签、创建 Release 或部署官网。
+- 最终构建源码提交：663d0d844fa3d8bbe5efbf11a570ac1b869d331e；随后仅更新公开元数据和验收记录，App 源码未变。正式文件 Lunatide-v1.0.0.apk，versionCode 10000，10,118,356 字节，minSdk 26 / targetSdk 37。
+- APK SHA-256：77e0902292ec9304619b0f31d9cf492a50e4556675c44258b5076d4e5414a39b。
+- 正式证书 SHA-256：4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676；apksigner 实际 v2=true，非 Android Debug 证书。密钥与本机配置没有入库，未读取或输出密码。
+- 验证：`verifyPrivacy` ✅ / `testDebugUnitTest` ✅（129 tests，0 failures/errors/skipped，本轮无新增 App 测试）/ `lintDebug` ✅ / `assembleDebug` ✅ / `lintRelease` ✅ / `assembleRelease` ✅；`connectedDebugAndroidTest` ✅（独立 Lunatide_Release_QA / API 35，15 tests、0 failures/errors/skipped）。不把未知设备项目标为通过。
+- 正式 APK 权限：POST_NOTIFICATIONS、USE_BIOMETRIC、USE_FINGERPRINT、RECEIVE_BOOT_COMPLETED、WAKE_LOCK 和内部 DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION；没有 INTERNET/ACCESS_NETWORK_STATE。verifyPrivacy、最终 APK 权限、debug/release Manifest 均通过，未新增依赖。
+- R8 与文本：最终 DEX 的 Log.v/d/i/w/e 调用为 0；正式包不含示例入口；政策/许可 assets 字节同源。UTF-8 无 BOM、LF、单个末尾换行，Get-FileHash 与 .sha256/元数据文件名及字节数独立核对一致；dist 与 docs/site 的 release-info 字节一致；官网模板无未填字段。
+- 正式升级实测：从 M9 源码构建 0.1.0 / 100，临时构建仅指定同一本机签名配置路径，没有复制密码或密钥。安装到独立新 AVD，跳过引导→记录经期与中等经量→直接覆盖正式 1.0.0 / 10000，首页/日历数据一致且三个 Tab 可用。原 Pixel_7 没有卸载或覆盖。
+- B6 补测 ✅：正式包编辑经量、痛经、症状、心情、体温 36.55、同房选项与虚构备注，关闭重开后逐项一致，并在强停冷启动后从数据库重新读取核对通过。首轮 ADB 注入断言未等输入法提交，字面值与实际提交文本不同；先完成输入法提交、记录实际可见文本，再独立重开逐字核对通过，没有把首次失败记通过。随后恢复同房默认隐藏，字段实际隐藏验证通过。未修改 App 或重签最终 APK。
+- 发布材料：dist 中实际有 APK、.sha256、release-info.json、RELEASE_NOTES-v1.0.0.md；docs/site 中 12 节文案、5 张虚构截图、双语标题、512px 图标与正式 release-info.json 齐全。README 指纹/哈希来自真实构建，并明确下载链接在正式 Release 发布后生效。
+- 验收复核：A1～A7、B6、H1～H12 的发布准备部分 ✅；H7/H8/H10 从此前待签名更新为实际通过，H12 已补正式证书升级。A8、B1 严格计时、D4 系统锁屏、D5 设备等待、E5 真实生物识别、E6 最近任务、F4 Excel/WPS、F6 真实云恢复及 G1～G6 中尚未完整实测的组合仍按下方全量表标 ⏭，没有以构建替代验证。中端真机 ≤1.5 秒未验证，模拟器曾有超过目标的样本，不宣称性能目标达标。
+- CI：b7b5336 与最终构建源码 663d0d8 均已 success；后者 https://github.com/xichugeek/Lunatide/actions/runs/40252124600 。接下来的元数据/进度提交未变更 App 源码。
+- 决策：D-018。下一步：按 09 §7 和 11 §4，先向人类报告实际版本/大小/哈希/证书/未验证项，取得明确同意后才推送 v1.0.0 标签、创建 GitHub Release 并上传两项附件；官网由独立流程发布。
 
 ### M10 恢复 · 正式签名构建 —— 🚧 继续验收（2026-10-26）
 - 关机后工作区干净，JBR 21/SDK 可用；重开本机交互签名窗口，用户完成密钥和配置。原 Pixel_7 恢复启动，App 冷启动成功、语言仍为 zh-CN，原记录保留。

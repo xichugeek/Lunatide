@@ -35,10 +35,10 @@ Android 模拟器实际运行，简体中文、浅色，**所有截图均为虚�
 - 版本：1.0.0（versionCode 10000）
 - APK 文件：Lunatide-v1.0.0.apk
 - 文件大小：10118356 字节
-- APK SHA-256：ad402147182072e18d01663b47b48bc61bd06e44e072a5232f7cc4b7e4a6e67a
+- APK SHA-256：77e0902292ec9304619b0f31d9cf492a50e4556675c44258b5076d4e5414a39b
 - 签名证书 SHA-256：4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676
-- 构建源码提交：b7b533618a481aea987401c7a2df60590bcf8617
-- 构建时间：10/26/2026 08:55:00
+- 构建源码提交：663d0d844fa3d8bbe5efbf11a570ac1b869d331e
+- 构建时间：10/26/2026 09:01:03
 - 下载：https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk
 - Release Notes：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0
 - SHA256 文件：https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk.sha256
