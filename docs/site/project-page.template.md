@@ -18,13 +18,14 @@ Android · Open Source · APK v{{versionName}} · Offline · No Network
 
 # 3. 实际截图
 
-Android 模拟器实际运行，简体中文、浅色，**所有截图均为虚构示例数据**。
+Android API 35 模拟器实际运行，简体中文，包含浅色与深色模式，**所有截图均为虚构示例数据**。
 
 ![今天，虚构示例数据](screenshots/01-today.png)
 ![日历，虚构示例数据](screenshots/02-calendar.png)
 ![每日记录，虚构示例数据](screenshots/03-daylog.png)
 ![统计，虚构示例数据](screenshots/04-stats.png)
 ![隐私与安全，虚构示例数据](screenshots/05-privacy.png)
+![深色经期中，虚构示例数据](screenshots/06-today-dark.png)
 
 标题与英文对应文案见 screenshots/captions.json。
 

@@ -6,7 +6,7 @@ PROJECT / 00X（编号由网站维护者填写）
 
 Lunatide · Private Period Tracker
 
-Android · Open Source · APK v1.0.0 · Offline · No Network
+Android · Open Source · APK v1.0.1 · Offline · No Network
 
 # 2. 项目简介
 
@@ -18,30 +18,31 @@ Android · Open Source · APK v1.0.0 · Offline · No Network
 
 # 3. 实际截图
 
-Android 模拟器实际运行，简体中文、浅色，**所有截图均为虚构示例数据**。
+Android API 35 模拟器实际运行，简体中文，包含浅色与深色模式，**所有截图均为虚构示例数据**。
 
 ![今天，虚构示例数据](screenshots/01-today.png)
 ![日历，虚构示例数据](screenshots/02-calendar.png)
 ![每日记录，虚构示例数据](screenshots/03-daylog.png)
 ![统计，虚构示例数据](screenshots/04-stats.png)
 ![隐私与安全，虚构示例数据](screenshots/05-privacy.png)
+![深色经期中，虚构示例数据](screenshots/06-today-dark.png)
 
 标题与英文对应文案见 screenshots/captions.json。
 
 # 4. 下载与正式版本
 
-本版本已在 GitHub Releases 正式发布，以下校验信息来自真实签名构建。
+以下信息由真实签名构建生成。下载链接在维护者发布对应 GitHub Release 后生效。
 
-- 版本：1.0.0（versionCode 10000）
-- APK 文件：Lunatide-v1.0.0.apk
-- 文件大小：10118356 字节
-- APK SHA-256：77e0902292ec9304619b0f31d9cf492a50e4556675c44258b5076d4e5414a39b
+- 版本：1.0.1（versionCode 10001）
+- APK 文件：Lunatide-v1.0.1.apk
+- 文件大小：10134180 字节
+- APK SHA-256：bef52aebb8a753805ef505a026b37eabbdda350290a613f88a71b2db45335bbf
 - 签名证书 SHA-256：4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676
-- 构建源码提交：663d0d844fa3d8bbe5efbf11a570ac1b869d331e
-- 构建时间：2026-10-26T09:01:03.7796291+08:00
-- 下载：https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk
-- Release Notes：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0
-- SHA256 文件：https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk.sha256
+- 构建源码提交：947f6f403f4e46958ff5c0867e55430729e73062
+- 构建时间：2026-10-26T13:02:00.6822534+08:00
+- 下载：https://github.com/xichugeek/Lunatide/releases/download/v1.0.1/Lunatide-v1.0.1.apk
+- Release Notes：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.1
+- SHA256 文件：https://github.com/xichugeek/Lunatide/releases/download/v1.0.1/Lunatide-v1.0.1.apk.sha256
 - 仓库：https://github.com/xichugeek/Lunatide
 
 # 5. 核心能力

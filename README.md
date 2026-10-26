@@ -15,13 +15,13 @@
 正式 APK 通过 [GitHub Releases](https://github.com/xichugeek/Lunatide/releases) 分发。[官网项目页](https://xichugeek.com/projects/lunatide/)为计划发布地址，由独立流程上线；请以 Releases 中实际发布的条目为准。
 
 <!-- RELEASE_INFO_START -->
-已签名构建：v1.0.0（10000），10118356 字节。
+已签名构建：v1.0.1（10001），10134180 字节。
 
-- APK：[Lunatide-v1.0.0.apk](https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk)
-- APK SHA-256：`77e0902292ec9304619b0f31d9cf492a50e4556675c44258b5076d4e5414a39b`
+- APK：[Lunatide-v1.0.1.apk](https://github.com/xichugeek/Lunatide/releases/download/v1.0.1/Lunatide-v1.0.1.apk)
+- APK SHA-256：`bef52aebb8a753805ef505a026b37eabbdda350290a613f88a71b2db45335bbf`
 - 签名证书 SHA-256：`4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676`
 
-此版本已正式发布：[Release Notes](https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0)。
+下载链接在对应 GitHub Release 正式发布后生效，是否已发布请查看 Releases 页面。
 <!-- RELEASE_INFO_END -->
 
 需要 Android 8.0 或以上。升级时直接覆盖安装，不要先卸载；卸载或换机前先导出加密备份。月汐不会联网检查更新。
@@ -34,13 +34,13 @@
 |---|---|---|
 | ![今天，虚构示例数据](docs/site/screenshots/01-today.png) | ![日历，虚构示例数据](docs/site/screenshots/02-calendar.png) | ![每日记录，虚构示例数据](docs/site/screenshots/03-daylog.png) |
 
-| 统计 | 隐私与安全 |
-|---|---|
-| ![统计，虚构示例数据](docs/site/screenshots/04-stats.png) | ![隐私与安全，虚构示例数据](docs/site/screenshots/05-privacy.png) |
+| 统计 | 隐私与安全 | 深色经期中 |
+|---|---|---|
+| ![统计，虚构示例数据](docs/site/screenshots/04-stats.png) | ![隐私与安全，虚构示例数据](docs/site/screenshots/05-privacy.png) | ![深色经期中，虚构示例数据](docs/site/screenshots/06-today-dark.png) |
 
 ## 功能
 
-> 1.0.1 已完成月夜与潮汐界面调整，可查看[实际运行预览（虚构数据，未发布）](docs/previews/1.0.1/README.md)。上方下载和校验信息仍对应已发布的 1.0.0。
+> 1.0.1 已完成月夜与潮汐界面调整，可查看[三页实际运行对照（虚构数据）](docs/previews/1.0.1/README.md)。下载状态请以对应 GitHub Release 为准。
 
 - 一键记录开始和结束，支持撤销、改日期与点滴出血。
 - 日历查看已记录经期和预测；预测仅供参考，不能用于避孕或代替医生诊断。
@@ -56,12 +56,12 @@
 从同一正式 Release 下载 APK 与 `.sha256` 文件。在 PowerShell 中计算：
 
 ```powershell
-$expected = (Get-Content .\Lunatide-v1.0.0.apk.sha256).Split(' ')[0]
-$actual = (Get-FileHash .\Lunatide-v1.0.0.apk -Algorithm SHA256).Hash.ToLowerInvariant()
+$expected = (Get-Content .\Lunatide-v1.0.1.apk.sha256).Split(' ')[0]
+$actual = (Get-FileHash .\Lunatide-v1.0.1.apk -Algorithm SHA256).Hash.ToLowerInvariant()
 if ($expected -ne $actual) { throw 'APK 文件校验不一致' }
 ```
 
-Linux 可用 `sha256sum -c Lunatide-v1.0.0.apk.sha256`。还应使用 Android SDK 的 `apksigner verify --print-certs` 核对证书 SHA-256 指纹与正式发布信息一致；同一项目的正式升级证书应保持不变。SHA-256 比对能检测文件变化，也应确认下载来源可信。
+Linux 可用 `sha256sum -c Lunatide-v1.0.1.apk.sha256`。还应使用 Android SDK 的 `apksigner verify --print-certs` 核对证书 SHA-256 指纹与正式发布信息一致；同一项目的正式升级证书应保持不变。SHA-256 比对能检测文件变化，也应确认下载来源可信。
 
 ## 从源码构建
 

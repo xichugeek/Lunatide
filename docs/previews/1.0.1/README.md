@@ -1,4 +1,4 @@
-# 1.0.1 界面预览（未发布）
+# 1.0.1 界面对照
 
 根据用户提供的月夜与潮汐示意调整。以下均为 Android API 35 模拟器实际运行截图，1080×2400、简体中文、100% 字号，**所有记录都是虚构示例数据**，没有同房记录。
 
@@ -16,8 +16,8 @@
 
 另有 [每日记录](screenshots/03-daylog.png)、[统计](screenshots/04-stats.png)、[隐私与安全](screenshots/05-privacy.png)。
 
-本机签名测试包为 `dist/Lunatide-v1.0.1.apk`，可直接覆盖同证书的 1.0.0。实际构建信息见 [release-info.json](release-info.json)，该文件由签名包生成；APK 没有提交到仓库。
+本机签名包为 `dist/Lunatide-v1.0.1.apk`，可直接覆盖同证书的 1.0.0。实际构建信息见 [release-info.json](release-info.json)，该文件由签名包生成；APK 没有提交到仓库。
 
 本轮 `verifyPrivacy testDebugUnitTest lintDebug assembleDebug`、`lintRelease assembleRelease` 及发布脚本均通过，129 个 JVM 测试、15 个 API 35 仪器测试通过；两个 Lint 均为 0 error、2 个已有 warning。同证书 1.0.0 → 1.0.1 升级后虚构记录保留。实体机和完整真人 TalkBack 仍未验证。
 
-已发布版本仍为 [v1.0.0](https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0)。本目录用于审阅 1.0.1，不替换 1.0.0 的下载与官网校验信息。
+本目录保留 1.0.1 的实际运行视觉记录。正式发布状态及下载请查看 [GitHub Releases](https://github.com/xichugeek/Lunatide/releases)，官网配套素材见 [docs/site](../../site/project-page.md)。
