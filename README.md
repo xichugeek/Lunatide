@@ -15,7 +15,13 @@
 正式版本通过 [GitHub Releases](https://github.com/xichugeek/Lunatide/releases) 和[官网项目页](https://xichugeek.com/projects/lunatide/)提供；官网地址为计划发布地址。当前处于首次正式签名与发布准备阶段，请以 Releases 中实际发布的条目为准。
 
 <!-- RELEASE_INFO_START -->
-正式签名尚未配置，暂无可公开分发的正式 APK、文件哈希或证书指纹。未发布本地测试包。
+已签名构建：v1.0.0（10000），10118356 字节。
+
+- APK：[Lunatide-v1.0.0.apk](https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk)
+- APK SHA-256：`ad402147182072e18d01663b47b48bc61bd06e44e072a5232f7cc4b7e4a6e67a`
+- 签名证书 SHA-256：`4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676`
+
+下载链接在对应 GitHub Release 正式发布后生效，是否已发布请查看 Releases 页面。
 <!-- RELEASE_INFO_END -->
 
 需要 Android 8.0 或以上。升级时直接覆盖安装，不要先卸载；卸载或换机前先导出加密备份。月汐不会联网检查更新。

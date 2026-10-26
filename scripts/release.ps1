@@ -5,6 +5,10 @@ $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 Set-Location -LiteralPath $root
 function Require-Success([string]$message) { if ($LASTEXITCODE -ne 0) { throw $message } }
+function Write-Utf8Lf([string]$path, [string]$value) {
+    $normalized = ($value -replace "`r`n?", "`n").TrimEnd([char[]]"`n") + "`n"
+    [IO.File]::WriteAllText($path, $normalized, [Text.UTF8Encoding]::new($false))
+}
 try {
     $branch = (& git branch --show-current).Trim()
     Require-Success '无法读取 Git 分支。'
@@ -83,12 +87,12 @@ try {
     $destination = Join-Path $dist $name
     Copy-Item -LiteralPath $apk -Destination $destination -Force
     $hash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToLowerInvariant()
-    Set-Content -LiteralPath ($destination + '.sha256') -Value "$hash  $name" -Encoding utf8NoBOM
+    Write-Utf8Lf ($destination + '.sha256') "$hash  $name"
     $info = [ordered]@{ app = 'Lunatide'; versionName = $version; versionCode = $versionCode; apkFile = $name;
         apkBytes = (Get-Item -LiteralPath $destination).Length; apkSha256 = $hash; signerCertSha256 = $fingerprint;
         minSdk = $minSdk; targetSdk = $targetSdk; permissions = $permissions; gitCommit = $commit;
         builtAt = [DateTimeOffset]::Now.ToOffset([TimeSpan]::FromHours(8)).ToString('o') }
-    $info | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $dist 'release-info.json') -Encoding utf8NoBOM
+    Write-Utf8Lf (Join-Path $dist 'release-info.json') ($info | ConvertTo-Json -Depth 5)
     $notes = @"
 # 月汐 v$version
 
@@ -103,7 +107,7 @@ SHA-256：$hash
 升级请直接覆盖安装，不要先卸载；卸载和换机前请先导出加密备份。月汐不会自动检查更新。
 截图均为虚构示例数据，预测仅供参考，不能用于避孕。
 "@
-    Set-Content -LiteralPath (Join-Path $dist "RELEASE_NOTES-v$version.md") -Value $notes -Encoding utf8NoBOM
+    Write-Utf8Lf (Join-Path $dist "RELEASE_NOTES-v$version.md") $notes
     Write-Host "正式签名 APK 校验完成：$name，SHA-256=$hash"
     Write-Host "证书 SHA-256：$fingerprint"
     Write-Host '下一步先运行 ./scripts/update-site.ps1 更新官网素材与 README，检查并提交这些文档。'

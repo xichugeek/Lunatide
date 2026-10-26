@@ -6,7 +6,7 @@ PROJECT / 00X（编号由网站维护者填写）
 
 Lunatide · Private Period Tracker
 
-Android · Open Source · APK 待正式签名发布 · Offline · No Network
+Android · Open Source · APK v1.0.0 · Offline · No Network
 
 # 2. 项目简介
 
@@ -30,9 +30,19 @@ Android 模拟器实际运行，简体中文、浅色，**所有截图均为虚�
 
 # 4. 下载与正式版本
 
-正式签名尚未配置，当前没有正式 APK 校验信息，也未创建正式 Release。请在完成正式签名后运行 scripts/update-site.ps1，从真实 release-info.json 生成本节。不要手填大小、哈希或证书指纹。
+以下信息由真实签名构建生成。下载链接在维护者发布对应 GitHub Release 后生效。
 
-GitHub Releases：https://github.com/xichugeek/Lunatide/releases
+- 版本：1.0.0（versionCode 10000）
+- APK 文件：Lunatide-v1.0.0.apk
+- 文件大小：10118356 字节
+- APK SHA-256：ad402147182072e18d01663b47b48bc61bd06e44e072a5232f7cc4b7e4a6e67a
+- 签名证书 SHA-256：4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676
+- 构建源码提交：b7b533618a481aea987401c7a2df60590bcf8617
+- 构建时间：10/26/2026 08:55:00
+- 下载：https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk
+- Release Notes：https://github.com/xichugeek/Lunatide/releases/tag/v1.0.0
+- SHA256 文件：https://github.com/xichugeek/Lunatide/releases/download/v1.0.0/Lunatide-v1.0.0.apk.sha256
+- 仓库：https://github.com/xichugeek/Lunatide
 
 # 5. 核心能力
 

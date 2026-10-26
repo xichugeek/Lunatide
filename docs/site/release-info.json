@@ -1,0 +1,21 @@
+{
+  "app": "Lunatide",
+  "versionName": "1.0.0",
+  "versionCode": 10000,
+  "apkFile": "Lunatide-v1.0.0.apk",
+  "apkBytes": 10118356,
+  "apkSha256": "ad402147182072e18d01663b47b48bc61bd06e44e072a5232f7cc4b7e4a6e67a",
+  "signerCertSha256": "4d4957412cedc56e24be8fec7061a1f83e9e1061cf3a97dea5965f0231a10676",
+  "minSdk": 26,
+  "targetSdk": 37,
+  "permissions": [
+    "android.permission.POST_NOTIFICATIONS",
+    "android.permission.RECEIVE_BOOT_COMPLETED",
+    "android.permission.USE_BIOMETRIC",
+    "android.permission.USE_FINGERPRINT",
+    "android.permission.WAKE_LOCK",
+    "com.xichugeek.lunatide.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+  ],
+  "gitCommit": "b7b533618a481aea987401c7a2df60590bcf8617",
+  "builtAt": "2026-10-26T08:55:00.2333685+08:00"
+}

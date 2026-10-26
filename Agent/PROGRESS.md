@@ -34,6 +34,8 @@
 - 本轮四项检查 `verifyPrivacy testDebugUnitTest lintDebug assembleDebug` ✅（129 tests、0 failures/errors/skipped；Lint 0 error、2 已说明 warnings）。没有把上轮 15 个仪器测试说成本轮重新执行。
 - 首次正式签名 `verifyPrivacy testDebugUnitTest lintRelease assembleRelease` ✅；release.ps1 后续 SDK 检查 ❌：Build Tools 37 输出 minSdkVersion，旧解析只认 sdkVersion，得到空值后安全停止，没有生成正式元数据。已兼容两个精确字段并在字段缺失时明确失败，等待干净提交后重跑。
 - 上轮 583634b 的 CI 已 success：https://github.com/xichugeek/Lunatide/actions/runs/40068109726 。当前正式包与升级将在独立测试 AVD 验收，避免删除原模拟器记录。
+- 修复 SDK 字段后 release.ps1 首次全流程 ✅，实际生成 APK、sha256、release-info、Release Notes；独立 Get-FileHash 校验文件名/字节数/哈希一致。正式签名与 v2 验证通过，最终 DEX 无 Log.v/d/i/w/e，政策/许可字节同源。新独立 AVD 的 connectedDebugAndroidTest ✅（15 tests、0 failures/errors/skipped）。
+- 官网更新正向流程已运行，发现生成文本的混合换行与多余末尾空行，已统一文本编码/换行，提交后再运行一次最终发布流程；同一正式签名的旧版覆盖升级尚在执行。
 - 决策：D-018；M10 尚未标完成，未创建 tag/Release。
 
 ### M10 继续 · 本机交互签名设置 —— 🚧 等待窗口内输入（2026-10-24）
